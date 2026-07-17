@@ -1,0 +1,134 @@
+Welcome to the YeOldeWorld game
+
+inspired by oldschool nes rpg - 8bit graphics, 16x16 tilesets, simple controls.
+
+this is multiplayer only rpg, one could say real-time roguelike, but please don't - it's not.
+
+Olde has:
+        - handcrafted maps - that can be big as 4096x4096 tiles
+        - dedicated host using ENet - 4 (more in the future) players PVP/E
+        - oldschool nes vibe (simpler the better)
+
+network library is ENet https://github.com/zpl-c/enet
+graphics library is Raylib https://github.com/raysan5/raylib
+
+graphics assets are https://opengameart.org/content/simple-broad-purpose-tileset
+
+- provide the enet and raylib libraries into '/src'
+- make
+- make install (for game installation)
+- make install_editor
+- make install_host
+- make clean
+
+Windows compilation is not available at the moment, Olde is developed under Fedora Linux
+
+
+version history:
+0.0.1 - init
+0.0.2 - firstly developed is editor for map construction and testing how to handle pointer (player avatar later)
+      - camera work in progress
+      - trying to comeup with proper world rendering
+      - menu and in-game menu added
+      - added debug mode
+0.0.2a- tilebased rendering system prototype is done, with smooth camera movement around player
+             rendering frame now is tied to camera movement
+      - map array starts with 32x32 - planned is 4096x4096
+      - added debug reload assets and map while in loop under R key
+0.0.3 - consolidated project to one folder of src
+      - save/load map files implemented
+      - map have header files that define map maximum width and heigth
+      - added small cpp toolset for testing small functions
+      - menu system overhaul and cleanup
+      - tileset pallette in editor
+      - tileset animation system
+0.0.3a- moved map array stack allocation to raw pointer heap memory (better CPU performance - lowering cpu time from 9% to 7%)
+      - changed map tile value from uint8_t to uint16_t - for bigger maps and more tilesets types
+      - [GAME] game client development started
+      - [GAME] FakeNet implemented as placeholder for Enet library
+0.0.4 - [GAME] added local player with simple animations
+      - player avatar spritesheet has been set
+      - added testing collision detection
+      - added testing interactions (door opening or etc) 
+      - changed asset pack to zombie theme
+0.0.5 - multilayer map and collision system added
+      - map tileset overhaul
+      - [EDITOR] spawn points placement/load/save implemented
+      - code cleanup and preparation for network implementation
+      - added ENet libraries without functionality to test compilation
+      - added working options menu with fullscreen/resize options
+      - menu overhaul (added sprite graphics to menu selecion)
+      - [EDITOR] added dynamic map resize
+      - fixed MapTools memory leaks
+0.0.6 - assets rework breaking compatibility with older maps (see res/res.nfo for more info)
+      - map tile render adjust for new assets spritesheets
+      - collision adjust too
+      - [EDITOR] added help panel
+      - [EDITOR] added whole layer cleanup functions
+      - removed tools folder
+      - collison and animation reworked
+0.0.7 - basic ENet implementation (more info in notes)
+      - removed offline test mode from client
+0.0.7a- reworked local_player to player[max_clients] array for networking
+      - added connection/disconnection logic and client buffers
+0.0.7b- basic networking implemented - testing begins
+      - small bug fixes
+0.0.8 - 
+
+ongoing testing:
+- tilebased rendering system via MapTools class - prototype is done
+- save/load process implemented
+- tileset pallete to draw on maps
+- multilayered maps (ground/objects and walls/roofs)
+- [EDITOR] drawing selected tiles to map memory using tile pallette
+- asset deployment in formatted png files (read res/res.nfo!)
+- collisions and interactions between player and world map
+- [EDITOR] dynamic map resize, spawn points
+- main menu / pause menu
+
+in progress:
+- menu graphical overhaul and functionality
+- code cleanup
+- gui rework
+- [EDITOR] pallete rework
+- [EDITOR] help menu with keyboard layout
+- ENet implementation
+
+to do:
+- [NETWORK] interpolation of network entites
+- [GAME/NETWORK] picking up objects, using items, opening doors etc etc
+- prepare connection lobby menu
+- main menu graphics (background and sprites ?)
+- [GAME] adjust camera speed following player with rubberbanding
+- proper error handling of initialize map/objects/roofs xy arrays dynamic memory
+
+roadmap:
+0.0.6 to 0.0.9 - bug fixes and preparation for network library
+0.1.0 - proper networking system based on ENet
+0.2.0 - audio assets implementation
+and more to come
+
+notes:
+
+-=CPU / GPU USAGE METRICS:=-
+0.0.2a:
+GPU - ~14Mb vram usage
+CPU - 6,4% usage (no for() loop for tileset pallette)
+
+  one layer maps (32x32) - 2.1K Jun 14 21:35 test.map
+  two layer maps (32x32) - 4.1K Jun 19 22:12 test.map
+three layer maps (32x32) - 6.1K Jun 21 21:32 test.map
+
+0.0.5:
+CPU - 7.0% ~ 9.0% usage (3 layer draw for() loops and 2 for() loops for collision detection)
+
+0.0.6:
+GPU: - ~31Mb vram usage
+CPU: - 7.7 ~ 8.4 usage (same for both graphical modes)
+
+-=ENET NETWORK STUFF:=-
+
+basic connection / disconnection is working
+player number assign by host
+sending/receiving commands to open doors use objects, sending hit signals (weapons use)
+

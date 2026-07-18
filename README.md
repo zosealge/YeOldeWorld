@@ -1,2 +1,3 @@
 # YeOldeWorld
-RPG
+
+Simple multiplayer RPG.

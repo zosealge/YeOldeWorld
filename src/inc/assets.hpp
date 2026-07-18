@@ -7,11 +7,9 @@ class Game_Assets
     const int menu_tilesize=64;
 
     Font GameFont;
-    Texture2D GroundSprite;
+    Texture2D MapSprite;
     Texture2D EtcSprite;
     Texture2D AvatarsSprite;
-    Texture2D ObjectsSprite;
-    Texture2D RoofsSprite;
     Texture2D MenuSprite;
     Texture2D EditorHelpPanel;
     Rectangle MenuRectangle[101];

@@ -32,23 +32,19 @@ void Game_Assets::ReloadAssets()
 void Game_Assets::LoadAssets()
 {
     GameFont=LoadFont("res/Nes.ttf");
-    GroundSprite=LoadTexture("res/ground.png");
+    MapSprite=LoadTexture("res/map.png");
     EtcSprite=LoadTexture("res/etc.png");
     AvatarsSprite=LoadTexture("res/avatars.png");
-    ObjectsSprite=LoadTexture("res/objects.png"); 
     MenuSprite=LoadTexture("res/menu.png");
-    RoofsSprite=LoadTexture("res/roofs.png");
     EditorHelpPanel=LoadTexture("res/editor_help.png");
 }
 
 void Game_Assets::UnloadAssets()
 {
     UnloadFont(GameFont);
-    UnloadTexture(GroundSprite);
+    UnloadTexture(MapSprite);
     UnloadTexture(EtcSprite);
     UnloadTexture(AvatarsSprite);
-    UnloadTexture(ObjectsSprite);
     UnloadTexture(MenuSprite);
-    UnloadTexture(RoofsSprite);
     UnloadTexture(EditorHelpPanel);
 }

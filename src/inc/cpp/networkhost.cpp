@@ -23,7 +23,7 @@ bool NetworkHost::NetworkInitialize()
     }
 
     //if everyting init fine then
-    printf("YeOldeWorlde server started\n");
+    printf("\nYeOldeWorlde server started\n");
     for(int i=0;i<max_clients;i++)
     {
         Clients[i].Peer=nullptr;
@@ -48,7 +48,7 @@ void NetworkHost::NetworkDeinitialize()
 //
 //
 
-void NetworkHost::NetworkHostService() // here will be the server livings database added by reference
+void NetworkHost::NetworkHostService(MapTools &OldeMap)
 {
     ENetEvent event{};
     while(enet_host_service(server,&event,network_host_timeout)>0)
@@ -80,9 +80,39 @@ void NetworkHost::NetworkHostService() // here will be the server livings databa
                     Clients[playerId].ValidPosition=false;
                     Clients[playerId].Peer=event.peer;
 
-                    uint8_t buffer[2]{};
+                    int spawn_point=GetRandomValue(0,3);
+                    uint16_t givex=0;
+                    uint16_t givey=0;
+                    switch(spawn_point)
+                    {
+                        case 0:
+                        givex=OldeMap.spawn_point0_x;
+                        givey=OldeMap.spawn_point0_y;
+                        break;
+
+                        case 1:
+                        givex=OldeMap.spawn_point1_x;
+                        givey=OldeMap.spawn_point1_y;
+                        break;
+
+                        case 2:
+                        givex=OldeMap.spawn_point2_x;
+                        givey=OldeMap.spawn_point2_y;
+                        break;
+
+                        case 3:
+                        givex=OldeMap.spawn_point3_x;
+                        givey=OldeMap.spawn_point3_y;
+                        break;
+                    }
+
+                    printf("Client %d spawned at: x%d y%d\n",playerId,givex,givey);
+
+                    uint8_t buffer[6]{};
                     buffer[0]=AssignClientNumber; // send this info to connecting peer
                     buffer[1]=(uint8_t)playerId; // with number
+                    memcpy(&buffer[2],&givex,sizeof(uint16_t));
+                    memcpy(&buffer[4],&givey,sizeof(uint16_t));
 
                     uint8_t buffer_for_actives[2]{};
                     buffer_for_actives[0]=NewPlayer; //send this info to already connected clients
@@ -91,13 +121,12 @@ void NetworkHost::NetworkHostService() // here will be the server livings databa
                     ENetPacket *packet=enet_packet_create(buffer,sizeof(buffer),ENET_PACKET_FLAG_RELIABLE);
                     enet_peer_send(event.peer,channel_comm,packet);
 
-                    // reuse the exising packet
-                    packet=enet_packet_create(buffer_for_actives,sizeof(buffer_for_actives),ENET_PACKET_FLAG_RELIABLE);
+                    ENetPacket *packet_to_others=enet_packet_create(buffer_for_actives,sizeof(buffer_for_actives),ENET_PACKET_FLAG_RELIABLE);
 
                     for(int i=0;i<max_clients;i++)
                     {
                         if(i==playerId || Clients[i].Active==false) continue;
-                        enet_peer_send(Clients[i].Peer,channel_comm,packet);
+                        enet_peer_send(Clients[i].Peer,channel_comm,packet_to_others);
                     }
                     break;
                 }

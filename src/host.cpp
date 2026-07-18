@@ -4,6 +4,7 @@
 #include<iostream>
 #include<cstring>
 #include<csignal>
+#include"inc/maptools.hpp"
 #include"inc/network.hpp"
 #include"inc/networkhost.hpp"
 
@@ -22,13 +23,28 @@ int main()
     std::signal(SIGINT,exit_signal); // using std::signal because this host will block Your terminal
                                      // exit host peacefuly using Ctrl+C
                                      // and then host will disconnect all the clients, shutdown in proper way
+
+    std::string map_name="mordor.map";
+    MapTools OldeMap(map_name,false); // bool for editor new map
+    if(OldeMap.alloc_error)
+    {
+        printf("MapTools initialization error, shutdown \n");
+        return -1;
+    }
+    
     NetworkHost OldeHost;
     bool host_loop=OldeHost.NetworkInitialize();
-    if(!host_loop) return -1;
+    if(!host_loop)
+    {
+        printf("ENet initialization error, shutdown \n");
+        return -1;
+    }
 
     while(host_loop)
     {
-        OldeHost.NetworkHostService();
+        OldeHost.NetworkHostService(OldeMap);
+        //OldeHost.InteractionWithPlayers();
+        //OldeHost.InteractionWithEntities();
 
         if(host_shutdown)
         {

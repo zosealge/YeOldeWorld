@@ -63,7 +63,7 @@ int main()
     bool main_game=true;
     bool debug_mode=false;
     bool connect_to_host=false;
-    bool test_map=false; // will be deleted later
+    // bool test_map=false; // will be deleted later
     float d_time=0.0f;
 
 
@@ -212,27 +212,26 @@ int main()
 int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &OldeNet,float &d_time)
 {
     const int tilesize=16;
-    const int buffersize=256;
+    // const int buffersize=256;
 
     Game_Player OldePlayer;
     
     float speed_player_move=0.5f; // move this to player class
     // float speed_camera_movement=0.2f;
-    Vector2 localplayer_pointer_pos{0};
-    Vector2 camera_localplayer_pos{0};
-    Vector2 mouse_pos{0};
-    Vector4 render{0};
+    Vector2 localplayer_pointer_pos{};
+    // Vector2 camera_localplayer_pos{};
+    Vector2 mouse_pos{};
+    Vector4 render{};
 
     PlayerCamera OldeCam;
     PlayerGui OldeGui;
     Game_Menu OldeMenu(3);
-    MapTools OldeMap(OldeSettings.current_map,OldeSettings.editor_new_map);
+    MapTools OldeMap(OldeSettings.current_map,true); // load new map
     
     bool game_window=true;
     bool show_menu=false;
     bool debug_mode=false;
-    bool set_load_map=false;
-    bool debug_hide_objects=false;
+    // bool set_load_map=false;
     bool print_states=false; // TEMPORARY DEBUG
     int print_states_debug=0;
     // bool reloadAssets=false;
@@ -285,29 +284,9 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
     render.z=OldeSettings.zrender*tilesize;
     render.w=OldeSettings.wrender*tilesize;
 
-    local_spawn_point_num=GetRandomValue(0,3);
-    // this will be set on server in the future
-    // but for test will work fine
-    // since players do not collide with each other
-    switch(local_spawn_point_num)
-    {
-        case 0:
-            OldePlayer.pl_pointer_pos[local_player_id].x=OldeMap.spawn_point0_x*tilesize;
-            OldePlayer.pl_pointer_pos[local_player_id].y=OldeMap.spawn_point0_y*tilesize;
-        break;
-        case 1:
-            OldePlayer.pl_pointer_pos[local_player_id].x=OldeMap.spawn_point1_x*tilesize;
-            OldePlayer.pl_pointer_pos[local_player_id].y=OldeMap.spawn_point1_y*tilesize;
-        break;
-        case 2:
-            OldePlayer.pl_pointer_pos[local_player_id].x=OldeMap.spawn_point2_x*tilesize;
-            OldePlayer.pl_pointer_pos[local_player_id].y=OldeMap.spawn_point2_y*tilesize;
-        break;
-        case 3:
-            OldePlayer.pl_pointer_pos[local_player_id].x=OldeMap.spawn_point3_x*tilesize;
-            OldePlayer.pl_pointer_pos[local_player_id].y=OldeMap.spawn_point3_y*tilesize;
-        break;
-    }
+    OldePlayer.pl_pointer_pos[local_player_id].x=(float)OldeNet.local_spawn_point_x*tilesize;
+    OldePlayer.pl_pointer_pos[local_player_id].y=(float)OldeNet.local_spawn_point_y*tilesize;
+
     OldePlayer.MoveLocalPlayer(OldePlayer.pl_pointer_pos[local_player_id]);
     // OldePlayer.MoveLocalPlayer(localplayer_pointer_pos);
 
@@ -387,17 +366,6 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
             OldePlayer.local_use=true;
         }
 
-        if(IsKeyPressed(KEY_DELETE) && !show_menu && debug_mode)
-        {
-            if(debug_hide_objects)
-            {
-                debug_hide_objects=false;
-            }
-            else 
-            {
-                debug_hide_objects=true;
-            }
-        }
 
         if(IsKeyPressed(KEY_INSERT))
         {
@@ -449,8 +417,8 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
                 
                 OldePlayer.DrawNetworkPlayer(OldeAssets,d_time);
 
-                if(!debug_hide_objects) OldeMap.DrawObjects(OldeAssets,d_time,render,debug_mode);
-                OldeMap.DrawRoofs(OldeAssets,OldePlayer.pl_pointer_pos[local_player_id],d_time,render,debug_mode);
+                // if(!debug_hide_objects) OldeMap.DrawObjects(OldeAssets,d_time,render,debug_mode);
+                // OldeMap.DrawRoofs(OldeAssets,OldePlayer.pl_pointer_pos[local_player_id],d_time,render,debug_mode);
             EndMode2D();
 
             // OldeGui.DrawGui();
@@ -467,8 +435,7 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
                 DrawText(TextFormat("int   local player x=%d y=%d",     OldePlayer.cur_x,OldePlayer.cur_y),16,tilesize*7,16,WHITE);
                 DrawText(TextFormat("float local player x=%0.2f y=%0.2f",localplayer_pointer_pos.x,localplayer_pointer_pos.y),16,tilesize*8,16,WHITE);
                 if(OldePlayer.local_collide) DrawText("Collision!",16,tilesize*9,16,WHITE);
-                DrawText(TextFormat("spawn point number=%d",local_spawn_point_num),16,tilesize*10,16,WHITE);
-                DrawText(TextFormat("network player number=%d",local_player_id),16,tilesize*11,16,WHITE);
+                DrawText(TextFormat("network player number=%d",local_player_id),16,tilesize*10,16,WHITE);
             }
             if(show_menu) OldeMenu.DrawMenu(OldeAssets,OldeSettings,d_time,debug_mode);
         EndDrawing();

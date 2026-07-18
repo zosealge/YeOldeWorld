@@ -2,6 +2,7 @@
 #include"raylib.h"
 #include"enet.h"
 #include"network.hpp"
+#include"maptools.hpp"
 #include<string>
 #include<iostream>
 
@@ -17,7 +18,7 @@ class NetworkHost
 
     bool NetworkInitialize();
     void NetworkDeinitialize();
-    void NetworkHostService();
+    void NetworkHostService(MapTools &OldeMap);
     void NetworkDisconnectAllPeers();
 
     private:

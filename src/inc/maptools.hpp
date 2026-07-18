@@ -17,6 +17,8 @@ class MapTools
     const int quarter_tilesize=4;
     const int max_x=4096;
     const int max_y=4096; // maximum size of map array allocated in heap memory
+    // map array uses uint16_t size as a block for map x/y info
+    // in theory maps can be as large as 65535 x 65535
     const int min_x=16;
     const int min_y=16;
     const uint16_t tile_png_x=10;
@@ -29,7 +31,7 @@ class MapTools
     // const std::string map_head=".map";
     std::string loaded_filename;
 
-
+        bool alloc_error;
 
     uint16_t spawn_point0_x;
     uint16_t spawn_point0_y;
@@ -47,9 +49,9 @@ class MapTools
     ~MapTools();
 
     void DrawMap(Game_Assets &OldeAssets,float &d_time,Vector4 &render,bool debug_mode);
-    void DrawObjects(Game_Assets &OldeAssets,float &d_time,Vector4 &render,bool debug_mode);
-    void DrawRoofs(Game_Assets &OldeAssets,Vector2 &pointer_pos,float &d_time,Vector4 &render,bool debug_mode);
-    void DrawEditorRoofs(Game_Assets &OldeAssets,float &d_time,Vector4 &render,bool debug_mode);
+    // void DrawObjects(Game_Assets &OldeAssets,float &d_time,Vector4 &render,bool debug_mode);
+    // void DrawRoofs(Game_Assets &OldeAssets,Vector2 &pointer_pos,float &d_time,Vector4 &render,bool debug_mode);
+    // void DrawEditorRoofs(Game_Assets &OldeAssets,float &d_time,Vector4 &render,bool debug_mode);
     void ReloadMap();
     void NewMap();
 
@@ -77,25 +79,25 @@ class MapTools
     uint16_t max_size_y;
 
     uint16_t editor_max_palette_y;
-    Rectangle R_Walls[520];
-    Rectangle R_Objects[520];
-    Rectangle R_Roofs[520];
+    // Rectangle R_Walls[520];
+    // Rectangle R_Objects[520];
+    // Rectangle R_Roofs[520];
+    Rectangle R_Map[520];
     // Rectangle Collisions[32];
     Rectangle P_Collision;
-    Rectangle O_Collision;
-    Rectangle W_Collision;
+    // Rectangle O_Collision;
+    // Rectangle W_Collision;
     Vector2 tileset_curr;
     Vector2 draw_pos;
     Vector4 draw_frame;
     Vector4 draw_tile;
     // Vector4 draw_frame_obj;
     Vector4 draw_object;
-    bool alloc_error;
 
     // THIS IS THE MAP ARRAY POINTER
     uint16_t *map_arr;
-    uint16_t *obj_arr;
-    uint16_t *roofs_arr;
+    // uint16_t *obj_arr;
+    // uint16_t *roofs_arr;
     // USE WITH CARE
     
     void FirstSet();

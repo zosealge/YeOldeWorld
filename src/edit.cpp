@@ -186,9 +186,7 @@ int Set_Editor(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &d_time)
 
     enum Palette_types:uint8_t
     {
-        PaletteGround=0,
-        PaletteObjects=1,
-        PaletteRoofs=2
+        PaletteMap=0
     };
 
     // constexpr float start_point_x=7*tilesize;
@@ -197,20 +195,13 @@ int Set_Editor(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &d_time)
     // constexpr float start_point_w=11*tilesize;
 
     float speed_pointer_move=1.0f;
-    float speed_camera_movement=1.0f;
-    Vector2 edit_pointer_pos{0};
-    Vector2 camera_pointer_pos{0};
-    Vector2 mouse_pos{0};
-    Vector4 render{0};
+    Vector2 edit_pointer_pos{};
+    Vector2 camera_pointer_pos{};
+    Vector2 mouse_pos{}; // ?
+    Vector4 render{};
     int16_t palette_num=0;
-    uint8_t palette_type=PaletteGround;
-    // 0 - maptiles
-    // 1 - objects
-    // 2 - roofs
-    // will rework this into enum later
-    //
-    // Vector2_int palette_sel{0};
-
+    uint8_t palette_type=PaletteMap;
+    // for now - only one map layer
 
     Game_Player OldePlayer;
     PlayerCamera OldeCam;
@@ -223,7 +214,7 @@ int Set_Editor(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &d_time)
     bool show_menu=false;
     bool debug_mode=false;
     bool set_save_map=false;
-    bool set_load_map=false;
+    // bool set_load_map=false;
     bool reloadAssets=false;
     bool draw_only_selected_palette=false;
     bool map_resize=false;
@@ -251,15 +242,15 @@ int Set_Editor(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &d_time)
     edit_pointer_pos.x=OldeMap.spawn_point0_x*tilesize;
     edit_pointer_pos.y=OldeMap.spawn_point0_y*tilesize;
 
-    camera_pointer_pos.x=(OldeMap.spawn_point0_x-tilesize)*tilesize;
-    camera_pointer_pos.y=(OldeMap.spawn_point0_y-tilesize)*tilesize;
+    // camera_pointer_pos.x=(OldeMap.spawn_point0_x-tilesize)*tilesize;
+    // camera_pointer_pos.y=(OldeMap.spawn_point0_y-tilesize)*tilesize;
 
     OldeCam.ChangeSpeed(1.0f);
 
     while(editor_window)
     {
         mouse_pos=GetMousePosition();
-        d_time+=GetFrameTime();
+        d_time+=GetFrameTime(); // d_time for animations
         if(IsKeyPressed(KEY_ESCAPE)) show_menu=true;
 
         //TILE palette CURSOR
@@ -342,31 +333,31 @@ int Set_Editor(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &d_time)
 
         if(IsKeyDown(KEY_BACKSPACE) && IsKeyPressed(KEY_B) && !show_menu)
         {
-            OldeMap.EditorClearLayer(PaletteGround);
+            OldeMap.EditorClearLayer(PaletteMap);
         }
 
-        if(IsKeyDown(KEY_BACKSPACE) && IsKeyPressed(KEY_N) && !show_menu)
-        {
-            OldeMap.EditorClearLayer(PaletteObjects);
-        }
+        // if(IsKeyDown(KEY_BACKSPACE) && IsKeyPressed(KEY_N) && !show_menu)
+        // {
+        //     OldeMap.EditorClearLayer(PaletteObjects);
+        // }
 
-        if(IsKeyDown(KEY_BACKSPACE) && IsKeyPressed(KEY_M) && !show_menu)
-        {
-            OldeMap.EditorClearLayer(PaletteRoofs);
-        }
+        // if(IsKeyDown(KEY_BACKSPACE) && IsKeyPressed(KEY_M) && !show_menu)
+        // {
+        //     OldeMap.EditorClearLayer(PaletteRoofs);
+        // }
 
-        if(IsKeyPressed(KEY_ONE) && !show_menu)
-        {
-            palette_type=PaletteGround;
-        }
-        if(IsKeyPressed(KEY_TWO) && !show_menu)
-        {
-            palette_type=PaletteObjects;
-        }
-        if(IsKeyPressed(KEY_THREE) && !show_menu)
-        {
-            palette_type=PaletteRoofs;
-        }
+        // if(IsKeyPressed(KEY_ONE) && !show_menu)
+        // {
+        //     palette_type=PaletteMap;
+        // }
+        // if(IsKeyPressed(KEY_TWO) && !show_menu)
+        // {
+        //     palette_type=PaletteObjects;
+        // }
+        // if(IsKeyPressed(KEY_THREE) && !show_menu)
+        // {
+        //     palette_type=PaletteRoofs;
+        // }
 
         if(IsKeyPressed(KEY_U) && !show_menu)
         {
@@ -473,11 +464,7 @@ int Set_Editor(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &d_time)
 
             BeginMode2D(OldeCam.cam);
                 OldeMap.DrawMap(OldeAssets,d_time,render,debug_mode);
-                OldeMap.DrawObjects(OldeAssets,d_time,render,debug_mode);
-                
-                
-                if(palette_type==2) OldeMap.DrawEditorRoofs(OldeAssets,d_time,render,debug_mode);
-                // if(!palette_type<2) OldeMap.DrawRoofs(OldeAssets,edit_pointer_pos,d_time,render,debug_mode);
+                // OldeMap.DrawObjects(OldeAssets,d_time,render,debug_mode);
                 OldeEdit.DrawPointer(OldeAssets,d_time,debug_mode);
             EndMode2D();
 

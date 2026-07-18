@@ -2,6 +2,8 @@
 
 bool NetworkClient::NetworkInitialize()
 {
+    local_spawn_point_x=0;
+    local_spawn_point_y=0;
     server_disconnect=false;
     if(enet_initialize()!=0)
     {
@@ -152,6 +154,13 @@ void NetworkClient::Update(double now,float deltaT)
                             LocalPlayerId=ReadPlayerId(event.packet);
                             printf("You got number %d\n",LocalPlayerId);
                             Clients[LocalPlayerId].Active=true;
+                            memcpy(&local_spawn_point_x,&event.packet->data[2],sizeof(uint16_t));
+                            memcpy(&local_spawn_point_y,&event.packet->data[4],sizeof(uint16_t));
+                            // local_spawn_point_x=5;
+                            // local_spawn_point_y=6;
+
+                            // this will be automated via buffer functions
+                            // counting packets instead handcoding pointer positions
                         }
                     }
                     if(command==NewPlayer)

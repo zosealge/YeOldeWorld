@@ -17,6 +17,9 @@ class NetworkClient
 
     NetworkRemoteClientInfo Clients[max_clients]{};
 
+    uint16_t local_spawn_point_x;
+    uint16_t local_spawn_point_y;
+
     double LastNow;
     double LastInputSend;
     double InputUpdateInterval;

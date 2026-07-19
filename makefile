@@ -62,13 +62,12 @@ install_editor:
 	clear
 	$(CC) -o editor src/edit.cpp $(INC) $(RAY) $(NET) $(FLG)
 
-install_host:
+install_server:
 	clear
 	$(CC) -o server src/host.cpp $(INC) $(RAY) $(NET) $(FLG)
 
 uninstall:
 	clear
-	rm *.o
 	rm olde
 	rm server
 	rm editor

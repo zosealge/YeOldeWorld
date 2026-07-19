@@ -258,7 +258,7 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
     {
         // check all the incoming packets and dipatch
         // network commands before game loop starts
-        OldeNet.Update(GetTime(),GetFrameTime());
+        OldeNet.Update(GetTime(),GetFrameTime(),OldeMap);
     }
     
     for(int i=0;i<max_clients;i++)
@@ -405,7 +405,7 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
             }
         }
                             
-        OldeNet.Update(GetTime(),GetFrameTime());
+        OldeNet.Update(GetTime(),GetFrameTime(),OldeMap);
         
         BeginDrawing();
             ClearBackground(BLACK);
@@ -436,6 +436,7 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
                 DrawText(TextFormat("float local player x=%0.2f y=%0.2f",localplayer_pointer_pos.x,localplayer_pointer_pos.y),16,tilesize*8,16,WHITE);
                 if(OldePlayer.local_collide) DrawText("Collision!",16,tilesize*9,16,WHITE);
                 DrawText(TextFormat("network player number=%d",local_player_id),16,tilesize*10,16,WHITE);
+                DrawText(TextFormat("network map x=%d y=%d",OldeMap.EditorGetMaxX(),OldeMap.EditorGetMaxY()),16,tilesize*11,16,WHITE);
             }
             if(show_menu) OldeMenu.DrawMenu(OldeAssets,OldeSettings,d_time,debug_mode);
         EndDrawing();

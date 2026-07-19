@@ -108,11 +108,15 @@ void NetworkHost::NetworkHostService(MapTools &OldeMap)
 
                     printf("Client %d spawned at: x%d y%d\n",playerId,givex,givey);
 
-                    uint8_t buffer[6]{};
+                    uint8_t buffer[10]{};
                     buffer[0]=AssignClientNumber; // send this info to connecting peer
                     buffer[1]=(uint8_t)playerId; // with number
                     memcpy(&buffer[2],&givex,sizeof(uint16_t));
                     memcpy(&buffer[4],&givey,sizeof(uint16_t));
+                    uint16_t mapx=OldeMap.EditorGetMaxX();
+                    uint16_t mapy=OldeMap.EditorGetMaxY();
+                    memcpy(&buffer[6],&mapx,sizeof(uint16_t));
+                    memcpy(&buffer[8],&mapy,sizeof(uint16_t));
 
                     uint8_t buffer_for_actives[2]{};
                     buffer_for_actives[0]=NewPlayer; //send this info to already connected clients

@@ -71,6 +71,7 @@ class MapTools
     uint16_t EditorGetMaxX();
     uint16_t EditorGetMaxY();
 
+    void GameSetMapSize(uint16_t setx,uint16_t sety);
     void GameCheckCollision(Game_Player &OldePlayer,bool debug_mode,bool pl_action);
 
 

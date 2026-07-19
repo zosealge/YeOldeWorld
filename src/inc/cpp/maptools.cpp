@@ -644,6 +644,12 @@ void MapTools::EditorResizeMap(uint16_t x,uint16_t y)
 uint16_t MapTools::EditorGetMaxX(){return max_size_x;}
 uint16_t MapTools::EditorGetMaxY(){return max_size_y;}
 
+void MapTools::GameSetMapSize(uint16_t setx,uint16_t sety)
+{
+    max_size_x=setx;
+    max_size_y=sety;
+}
+
 void MapTools::FirstSet()
 {
     max_size_x=32;

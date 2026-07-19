@@ -2,6 +2,7 @@
 #include"raylib.h"
 #include"enet.h"
 #include"network.hpp"
+#include"maptools.hpp"
 #include<string>
 #include<iostream>
 
@@ -33,7 +34,7 @@ class NetworkClient
     // 
 
     bool NetworkConnectToHost(std::string what_address);
-    void Update(double now,float deltaT);
+    void Update(double now,float deltaT,MapTools &OldeMap);
     void Disconnect();
     int GetLocalPlayerId();
     bool Connected();

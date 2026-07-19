@@ -17,6 +17,7 @@ main:
 	$(CC) -c src/inc/cpp/networkclient.cpp $(FLG)
 	$(CC) -c src/inc/cpp/networkhost.cpp $(FLG)
 	$(CC) -c src/inc/cpp/player.cpp $(FLG)
+	echo OK
 
 debug:
 	clear

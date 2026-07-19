@@ -75,7 +75,7 @@ bool NetworkClient::NetworkConnectToHost(std::string what_address)
     }
 }
 
-void NetworkClient::Update(double now,float deltaT)
+void NetworkClient::Update(double now,float deltaT,MapTools &OldeMap)
 {
     LastNow=now;
 
@@ -156,8 +156,12 @@ void NetworkClient::Update(double now,float deltaT)
                             Clients[LocalPlayerId].Active=true;
                             memcpy(&local_spawn_point_x,&event.packet->data[2],sizeof(uint16_t));
                             memcpy(&local_spawn_point_y,&event.packet->data[4],sizeof(uint16_t));
-                            // local_spawn_point_x=5;
-                            // local_spawn_point_y=6;
+                            uint16_t mapx=0;
+                            uint16_t mapy=0;
+                            memcpy(&mapx,&event.packet->data[6],sizeof(uint16_t));
+                            memcpy(&mapy,&event.packet->data[8],sizeof(uint16_t));
+
+                            OldeMap.GameSetMapSize(mapx,mapy);
 
                             // this will be automated via buffer functions
                             // counting packets instead handcoding pointer positions

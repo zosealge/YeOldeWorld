@@ -608,12 +608,43 @@ uint16_t MapTools::EditorWhatTilesetOn(EditTools &OldeEdit,int palette_type)
     int y=OldeEdit.cur_y;
     switch(palette_type)
     {
-        case 0: return map_arr[y*max_size_y+x];
+        // case 0: return map_arr[y*max_size_y+x]; // bug?
+        case 0: return map_arr[y*max_y+x];
 
         default:
         break;
     }
     return 0;
+}
+
+uint16_t MapTools::GetTileInfoAt(uint16_t x, uint16_t y)
+{
+    // uint16_t tile=map_arr[y*max_size_y+x];
+    // return tile;
+
+    // WATCH OUT FOR CONVERSION FROM int16_t
+    // host drawing map and securing it in packet uses int16_t values
+    // to be able to seek below x 0 and y 0
+
+    return (map_arr[y*max_y+x]);
+}
+
+void MapTools::PlaceTileInfoAt(uint16_t type,uint16_t x,uint16_t y)
+{
+    map_arr[y*max_y+x]=type;
+}
+
+void MapTools::PlaceTileByMemPos(uint16_t tile,uint16_t tile_mem)
+{
+    map_arr[tile_mem]=tile;
+}
+
+void MapTools::MemcpyTile(uint8_t *buffer,uint16_t num,uint16_t x,uint16_t y,const int frame_size)
+{
+    size_t offset=frame_size*2;
+    int mem_map=y*max_y+x;
+
+    // provide packet pointer pls
 }
 
 void MapTools::EditorClearLayer(int layer_num)

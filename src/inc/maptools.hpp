@@ -64,6 +64,12 @@ class MapTools
     void EditorPlaceTile(EditTools &OldeEdit,int pallete_sel,int palette_type);
     uint16_t EditorWhatTilesetOn(EditTools &OldeEdit,int palette_type);
 
+    // NETWORKING WITH MAP
+    uint16_t GetTileInfoAt(uint16_t x, uint16_t y);
+    void PlaceTileInfoAt(uint16_t type,uint16_t x,uint16_t y);
+    void PlaceTileByMemPos(uint16_t tile,uint16_t tile_mem);
+    void MemcpyTile(uint8_t *buffer,uint16_t type,uint16_t x,uint16_t y,const int frame_size);
+
     void EditorClearLayer(int layer_num);
 
     void EditorResizeMap(uint16_t x,uint16_t y);

@@ -38,7 +38,7 @@ class NetworkClient
     void Disconnect();
     int GetLocalPlayerId();
     bool Connected();
-    void PrepareLocalClient(const Vector2 &pos,const uint8_t dir,const uint8_t act);
+    void PrepareLocalClient(const Vector2 &pos,const uint8_t dir,const uint8_t act,uint16_t posx,uint16_t posy);
 
     private:
 

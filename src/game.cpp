@@ -298,7 +298,6 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
 
     // Initialize network ahead
 
-
     while(game_window)
     {
         // OldeNet.ReceivePackets(OldePlayer);
@@ -391,7 +390,8 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
 
         OldeNet.PrepareLocalClient(OldePlayer.pl_pointer_pos[local_player_id],
                                   OldePlayer.pl_dir[local_player_id],
-                                  OldePlayer.pl_act[local_player_id]);
+                                  OldePlayer.pl_act[local_player_id],
+                                  OldePlayer.cur_x,OldePlayer.cur_y);
                                   
         for(int i=0;i<max_clients;i++)
         {

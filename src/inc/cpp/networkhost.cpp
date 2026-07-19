@@ -162,6 +162,10 @@ void NetworkHost::NetworkHostService(MapTools &OldeMap)
                     Clients[playerId].backpack_slot2=event.packet->data[6];
                     memcpy(&Clients[playerId].x,&event.packet->data[7],sizeof(float));
                     memcpy(&Clients[playerId].y,&event.packet->data[11],sizeof(float));
+                    memcpy(&Clients[playerId].posx,&event.packet->data[15],sizeof(uint16_t));
+                    memcpy(&Clients[playerId].posy,&event.packet->data[17],sizeof(uint16_t));
+
+                    
 
                     ENetPacket *new_packet=enet_packet_create(event.packet->data,event.packet->dataLength,ENET_PACKET_FLAG_RELIABLE);
                     // and send this packet to everybody but not the playerId
@@ -175,15 +179,68 @@ void NetworkHost::NetworkHostService(MapTools &OldeMap)
                         }
                     }
 
-                    // game_buffer[0]=Clients[LocalPlayerId].direction;
-                    // game_buffer[1]=Clients[LocalPlayerId].action;
-                    // game_buffer[2]=Clients[LocalPlayerId].hands;
-                    // game_buffer[3]=Clients[LocalPlayerId].backpack_slot0;
-                    // game_buffer[4]=Clients[LocalPlayerId].backpack_slot1;
-                    // game_buffer[5]=Clients[LocalPlayerId].backpack_slot2;
-                    // memcpy(&game_buffer[6],&Clients[LocalPlayerId].Position.x,sizeof(float));
-                    // memcpy(&game_buffer[10],&Clients[LocalPlayerId].Position.y,sizeof(float));
+                    // packet construction with map inside meant for event.peer himself
+                    // based on posx/posy location
+                    // this can be verified with Vector2 player position
+                    
+                    uint8_t map_buffer[300]{};
+                    map_buffer[0]=playerId;
+                    map_buffer[1]=MapForPlayer;
+                    size_t sizetile=sizeof(uint16_t);
+                    int16_t start_x=Clients[playerId].posx-(map_window_buffer/2);
+                    int16_t start_y=Clients[playerId].posy-(map_window_buffer/2);
+                    int16_t end_x=(start_x)+map_window_buffer;
+                    int16_t end_y=(start_y)+map_window_buffer;
+                    uint16_t end_map_x=OldeMap.EditorGetMaxX();
+                    uint16_t end_map_y=OldeMap.EditorGetMaxY();
 
+                    uint16_t maptile=0;
+
+                    int counter=0;
+
+                    size_t offset=sizeof(uint16_t);
+                    for(int16_t y=start_y;y<end_y;y++)
+                    {
+                        for(int16_t x=start_x;x<end_x;x++)
+                        {
+                            if(x<0 || y<0 || x>end_map_x-1 || y>end_map_y-1)
+                            {
+                                // maptile=OldeMap.GetTileInfoAt(x,y);
+                                maptile=0;
+                                // printf("# ");
+                                // if(counter%12==0) printf("\n");
+                                memcpy(&map_buffer[offset],&maptile,sizetile);
+                            }
+                            else
+                            {
+                                maptile=OldeMap.GetTileInfoAt(x,y);
+                                // maptile=30;
+                                memcpy(&map_buffer[offset],&maptile,sizetile);
+                                // printf("%x ",maptile);
+                                // if(counter%12==0) printf("\n");
+                            }
+                            counter++;
+                            offset+=sizetile;
+                        }
+                    }
+
+                    // size_t offset_test_t = 0;
+                    // int counter_test = 0;
+
+                    // for(int y=0;y<12;y++)
+                    // {
+                    //     for(int x=0;x<12;x++)
+                    //     {
+                    //         printf("%x ",map_buffer[offset_test_t]);
+                    //         counter_test++;
+                    //         if(counter_test%12==0) printf("\n");
+                    //         offset_test_t+=sizeof(uint16_t);
+                    //     }
+                    // }
+
+                    ENetPacket *map_packet=enet_packet_create(map_buffer,sizeof(map_buffer),ENET_PACKET_FLAG_RELIABLE);
+                    enet_peer_send(Clients[playerId].Peer,channel_game,map_packet);
+                    
                 }
                 if(event.channelID==channel_comm)
                 {

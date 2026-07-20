@@ -13,6 +13,8 @@ const int max_out_bandwith=0; // no limits
 const int network_port=7777;
 const int network_message_size=64;
 const int map_window_buffer=12;
+const size_t map_t=sizeof(uint16_t);
+const size_t map_offset_start_t=6;
 // MUST BE A VALUE THAT CAN BE DIVIDED BY 2
 // it means it is a x=12 and y=12 tiles of map window sent to player in packet
 // map is now configured as uint16_t and its a 2 byte integer
@@ -22,7 +24,7 @@ const int map_window_buffer=12;
 const enet_uint32 network_host_timeout=5;
 
 
-struct NetworkClientInfo
+struct NetworkClientInfo // SERVER STRUCTURE - MAKE A BETTER STRUCT NAME!!!
 {
     bool Active; // is player slot active
     bool ValidPosition; 
@@ -43,7 +45,7 @@ struct NetworkClientInfo
     float dy;
 };
 
-struct NetworkRemoteClientInfo
+struct NetworkRemoteClientInfo // CLIENT STRUCTURE - MAKE A BETTER STRUCT NAME!!!
 {
     bool Active;
     Vector2 Position;
@@ -57,6 +59,8 @@ struct NetworkRemoteClientInfo
     uint8_t backpack_slot2;
     uint16_t posx;
     uint16_t posy;
+    uint16_t act_posx;
+    uint16_t act_posy;
 };
 
 struct MapFrame

@@ -51,6 +51,7 @@ version history:
 0.0.7b- basic networking implemented - testing begins
       - small bug fixes
 0.0.8 - added networked map - server sends map to player
+      - fixed map tearing glitch
       - 
 
 ongoing testing:

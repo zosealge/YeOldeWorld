@@ -216,7 +216,7 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
 
     Game_Player OldePlayer;
     
-    float speed_player_move=0.5f; // move this to player class
+    float speed_player_move=0.1f; // move this to player class
     // float speed_camera_movement=0.2f;
     Vector2 localplayer_pointer_pos{};
     // Vector2 camera_localplayer_pos{};
@@ -360,6 +360,21 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
             OldePlayer.pl_dir[local_player_id]='c';
         }
 
+        if(IsKeyDown(KEY_LEFT_SHIFT) && !show_menu)
+        {
+            speed_player_move=0.5f;
+        }
+
+        if(IsKeyDown(KEY_LEFT_CONTROL) && !show_menu)
+        {
+            speed_player_move=2.0f;
+        }
+
+        if(IsKeyUp(KEY_LEFT_SHIFT) && IsKeyUp(KEY_LEFT_CONTROL))
+        {
+            speed_player_move=0.1f;
+        }
+
         if(IsKeyPressed(KEY_SPACE) && !show_menu)
         {
             OldePlayer.local_use=true;
@@ -392,7 +407,7 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
                                   OldePlayer.pl_dir[local_player_id],
                                   OldePlayer.pl_act[local_player_id],
                                   OldePlayer.cur_x,OldePlayer.cur_y);
-                                  
+                            
         for(int i=0;i<max_clients;i++)
         {
             if(i==local_player_id) continue;
@@ -405,13 +420,16 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
             }
         }
                             
-        OldeNet.Update(GetTime(),GetFrameTime(),OldeMap);
+        // OldeNet.Update(GetTime(),GetFrameTime(),OldeMap);
         
         BeginDrawing();
             ClearBackground(BLACK);
 
             BeginMode2D(OldeCam.cam);
                 OldeMap.DrawMap(OldeAssets,d_time,render,debug_mode);
+                OldeNet.Update(GetTime(),GetFrameTime(),OldeMap); // first draw map!
+                                                                    // then get updates from network
+                                                                    // and redraw map window
                 OldeMap.GameCheckCollision(OldePlayer,debug_mode,speed_player_move);
                 OldePlayer.DrawLocalPlayer(OldeAssets,d_time,debug_mode);
                 

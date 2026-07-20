@@ -120,21 +120,12 @@ void NetworkClient::Update(double now,float deltaT,MapTools &OldeMap)
             {
                 if(event.packet->dataLength<1) break;
 
-                        if(event.channelID==channel_game)
+                if(event.channelID==channel_game)
                 {
-                    // //event.packet->data[0] - is the sender number
-                    // Clients[playerId].direction=event.packet->data[1];
-                    // Clients[playerId].action=event.packet->data[2];
-                    // Clients[playerId].hands=event.packet->data[3];
-                    // Clients[playerId].backpack_slot0=event.packet->data[4];
-                    // Clients[playerId].backpack_slot1=event.packet->data[5];
-                    // Clients[playerId].backpack_slot2=event.packet->data[6];
-                    // memcpy(&Clients[playerId].x,&event.packet->data[7],sizeof(float));
-                    // memcpy(&Clients[playerId].y,&event.packet->data[11],sizeof(float));
-
                     int RemotePlayer=ReadWhoSendPacket(event.packet);
                     if(RemotePlayer!=LocalPlayerId)
                     {
+                        // make better deserializer here
                         Clients[RemotePlayer].Active=true;
                         Clients[RemotePlayer].direction=event.packet->data[1];
                         Clients[RemotePlayer].action=event.packet->data[2];
@@ -146,65 +137,68 @@ void NetworkClient::Update(double now,float deltaT,MapTools &OldeMap)
                         memcpy(&Clients[RemotePlayer].Position.y,&event.packet->data[11],sizeof(float));
                     }
 
-                    if(RemotePlayer==LocalPlayerId)
+                    if(RemotePlayer==LocalPlayerId) // if the sender peer is the same as reciving
+                                                    // then it means it can be a map part from server
                     {
                         if(event.packet->data[1]!=MapForPlayer) break;
                         else
                         {
-                            // uint8_t fake_buffer[300]{};
-                            // uint16_t fake_tile=20;
-                            // size_t fake_t=sizeof(uint16_t);
-                            // size_t offset_t=0;
-                            // for(int x=0;x<140;x++)
-                            // {
-                            //     memcpy(&fake_buffer[offset_t],&fake_tile,fake_t);
-                            //     offset_t+=fake_t;
-                            // }
-                            size_t sizetile=sizeof(uint16_t);
-                            size_t packetsize=event.packet->dataLength;
-                            int16_t start_x=Clients[LocalPlayerId].posx-(map_window_buffer/2);
-                            int16_t start_y=Clients[LocalPlayerId].posy-(map_window_buffer/2);
-                            int16_t end_x=(start_x)+map_window_buffer;
-                            int16_t end_y=(start_y)+map_window_buffer;
-                            uint16_t end_map_x=OldeMap.EditorGetMaxX();
-                            uint16_t end_map_y=OldeMap.EditorGetMaxY();
-                            size_t offset=sizeof(uint16_t); // will set on 2
-                                                            // 0 - is sender ID
-                                                            // 1 - is packet command
-                            uint16_t tile_mem=0;
-                            uint16_t tile_set=0;
-
-                            int counter=0;
-
-                            for(int16_t y=start_y;y<end_y;y++)
+                            uint16_t check_posx;
+                            memcpy(&check_posx,&event.packet->data[2],map_t);
+                            uint16_t check_posy;
+                            memcpy(&check_posy,&event.packet->data[4],map_t);
+                            if(check_posx==Clients[LocalPlayerId].posx && check_posy==Clients[LocalPlayerId].posy)
                             {
-                                for(int16_t x=start_x;x<end_x;x++)
+                                int16_t start_x=Clients[LocalPlayerId].posx-(map_window_buffer/2);
+                                int16_t start_y=Clients[LocalPlayerId].posy-(map_window_buffer/2);
+                                int16_t end_x=(start_x)+map_window_buffer;
+                                int16_t end_y=(start_y)+map_window_buffer;
+                                uint16_t end_map_x=OldeMap.EditorGetMaxX();
+                                uint16_t end_map_y=OldeMap.EditorGetMaxY();
+                                size_t offset=map_offset_start_t; // will set on 2
+                                                                // 0 - is sender ID
+                                                                // 1 - is packet command
+                                                                // 2 - (uint16_t) pos x
+                                                                // 4 - (uint16_t) pos y
+                                uint16_t tile_set=0;
+
+                                int counter=0;
+
+                                for(int16_t y=start_y;y<end_y;y++)
                                 {
-                                    if(x<0 || y<0 || x>end_map_x-1 || y>end_map_y-1)
+                                    for(int16_t x=start_x;x<end_x;x++)
                                     {
-                                        // printf("opsie\n");
-                                        // if(counter%12==0) printf("\n");
+                                        if(x<0 || y<0 || x>end_map_x-1 || y>end_map_y-1)
+                                        {
+                                            // no action / optional action
+                                            // if(debug)
+                                            // {
+                                            //      OldeMap.PlaceTileInfoAt(debug_tile,x,y);
+                                            // }
+                                        }
+                                        else
+                                        {
+                                            if(offset>event.packet->dataLength) break;
+                                            
+                                            memcpy(&tile_set,&event.packet->data[offset],map_t);
+                                            if(OldeMap.GetTileInfoAt(x,y)!=tile_set)
+                                            {
+                                                OldeMap.PlaceTileInfoAt(tile_set,x,y);
+                                            }
+                                        }
+                                        offset+=map_t;
+                                        counter++;
+                                        
                                     }
-                                    else
-                                    {
-                                        memcpy(&tile_set,&event.packet->data[offset],sizetile);
-                                        // memcpy(&tile_set,&fake_buffer[offset],sizetile);
-                                        // tile_set=10; for debug
-                                        OldeMap.PlaceTileInfoAt(tile_set,x,y);
-                                        // OldeMap.PlaceTileByMemPos(tile_set,tile_mem);
-                                        // printf("%x ",tile_set);
-                                        // if(counter%12==0) printf("\n");
-                                    }
-                                    offset+=sizetile;
-                                    counter++;
-                                    
                                 }
                             }
-
-                            //printf("packet from host is %zu\n",packetsize);
-                            // printf("packet is %zu bytes\n",offset);
+                            else
+                            {
+                                // else what?
+                               
+                            }
                         }
-                        //plaace tile where player stands
+                        
                     }
 
                 }
@@ -308,6 +302,8 @@ void NetworkClient::PrepareLocalClient(const Vector2 &pos,const uint8_t dir,cons
     Clients[LocalPlayerId].backpack_slot2=0;
     Clients[LocalPlayerId].posx=posx;
     Clients[LocalPlayerId].posy=posy;
+    Clients[LocalPlayerId].act_posx=posx;
+    Clients[LocalPlayerId].act_posy=posy;
 }
     
     

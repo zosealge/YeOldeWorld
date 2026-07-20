@@ -170,7 +170,8 @@ void NetworkHost::NetworkHostService(MapTools &OldeMap)
                     memcpy(&Clients[playerId].posx,&event.packet->data[15],sizeof(uint16_t));
                     memcpy(&Clients[playerId].posy,&event.packet->data[17],sizeof(uint16_t));
 
-                    
+                    Clients[playerId].act_posx=Clients[playerId].posx;
+                    Clients[playerId].act_posy=Clients[playerId].posy;
 
                     ENetPacket *new_packet=enet_packet_create(event.packet->data,event.packet->dataLength,ENET_PACKET_FLAG_RELIABLE);
                     // and send this packet to everybody but not the playerId
@@ -188,68 +189,53 @@ void NetworkHost::NetworkHostService(MapTools &OldeMap)
                     // based on posx/posy location
                     // this can be verified with Vector2 player position
 
-                    // if player moved from his act_pos then start sending him map elements
-                    if(Clients[playerId].posx!=Clients[playerId].act_posx || Clients[playerId].posy!=Clients[playerId].act_posy)
+                    uint8_t map_buffer[384]{};
+                    map_buffer[0]=playerId;
+                    map_buffer[1]=MapForPlayer;
+                    // size_t sizetile=sizeof(uint16_t);
+                    uint16_t peer_posx=Clients[playerId].act_posx;
+                    uint16_t peer_posy=Clients[playerId].act_posy;
+                    memcpy(&map_buffer[2],&peer_posx,map_t);
+                    memcpy(&map_buffer[4],&peer_posy,map_t);
+                    // send back peer his last server known position to check with his client
+                    // 
+                    // map write starts at 6th pointer position in map_buffer
+                    int16_t start_x=Clients[playerId].posx-(map_window_buffer/2);
+                    int16_t start_y=Clients[playerId].posy-(map_window_buffer/2);
+                    int16_t end_x=(start_x)+map_window_buffer;
+                    int16_t end_y=(start_y)+map_window_buffer;
+                    uint16_t end_map_x=OldeMap.EditorGetMaxX();
+                    uint16_t end_map_y=OldeMap.EditorGetMaxY();
+
+                    uint16_t maptile=0;
+
+                    int counter=0;
+
+                    size_t offset=map_offset_start_t;
+
+                    for(int16_t y=start_y;y<end_y;y++)
                     {
-                        uint8_t map_buffer[300]{};
-                        map_buffer[0]=playerId;
-                        map_buffer[1]=MapForPlayer;
-                        size_t sizetile=sizeof(uint16_t);
-                        int16_t start_x=Clients[playerId].posx-(map_window_buffer/2);
-                        int16_t start_y=Clients[playerId].posy-(map_window_buffer/2);
-                        int16_t end_x=(start_x)+map_window_buffer;
-                        int16_t end_y=(start_y)+map_window_buffer;
-                        uint16_t end_map_x=OldeMap.EditorGetMaxX();
-                        uint16_t end_map_y=OldeMap.EditorGetMaxY();
-
-                        uint16_t maptile=0;
-
-                        int counter=0;
-
-                        size_t offset=sizeof(uint16_t);
-                        for(int16_t y=start_y;y<end_y;y++)
+                        for(int16_t x=start_x;x<end_x;x++)
                         {
-                            for(int16_t x=start_x;x<end_x;x++)
+                            if(x<0 || y<0 || x>end_map_x-1 || y>end_map_y-1)
                             {
-                                if(x<0 || y<0 || x>end_map_x-1 || y>end_map_y-1)
-                                {
-                                    // maptile=OldeMap.GetTileInfoAt(x,y);
-                                    maptile=0;
-                                    // printf("# ");
-                                    // if(counter%12==0) printf("\n");
-                                    memcpy(&map_buffer[offset],&maptile,sizetile);
-                                }
-                                else
-                                {
-                                    maptile=OldeMap.GetTileInfoAt(x,y);
-                                    // maptile=30;
-                                    memcpy(&map_buffer[offset],&maptile,sizetile);
-                                    // printf("%x ",maptile);
-                                    // if(counter%12==0) printf("\n");
-                                }
-                                counter++;
-                                offset+=sizetile;
+                                // maptile=OldeMap.GetTileInfoAt(x,y);
+                                maptile=0;
+                                memcpy(&map_buffer[offset],&maptile,map_t);
                             }
+                            else
+                            {
+                                maptile=OldeMap.GetTileInfoAt(x,y);
+                                // maptile=30;
+                                memcpy(&map_buffer[offset],&maptile,map_t);
+                            }
+                            counter++;
+                            offset+=map_t;
                         }
-
-                        // size_t offset_test_t = 0;
-                        // int counter_test = 0;
-
-                        // for(int y=0;y<12;y++)
-                        // {
-                        //     for(int x=0;x<12;x++)
-                        //     {
-                        //         printf("%x ",map_buffer[offset_test_t]);
-                        //         counter_test++;
-                        //         if(counter_test%12==0) printf("\n");
-                        //         offset_test_t+=sizeof(uint16_t);
-                        //     }
-                        // }
-
-                        ENetPacket *map_packet=enet_packet_create(map_buffer,sizeof(map_buffer),ENET_PACKET_FLAG_RELIABLE);
-                        enet_peer_send(Clients[playerId].Peer,channel_game,map_packet);
                     }
-                    
+                    ENetPacket *map_packet=enet_packet_create(map_buffer,sizeof(map_buffer),ENET_PACKET_FLAG_RELIABLE);
+                    enet_peer_send(Clients[playerId].Peer,channel_game,map_packet);
+                
                     
                     
                 }

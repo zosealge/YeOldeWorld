@@ -21,10 +21,26 @@ graphics library is Raylib https://github.com/raysan5/raylib
 
 graphics assets are https://opengameart.org/content/simple-broad-purpose-tileset
 
+# Compilation:
+
+        please provide following compiled static libraries to src/
+                - libraylib.a - from raylib
+                - libenet.a   - from zpl-c/enet
+        
+        and header files into src/inc/
+                - raylib.h
+                - enet.h
+
+then:
+
 - make
 - make install (for game installation)
 - make install_editor
 - make install_server
 - make clean
+
+or
+
+- make install_all for full compilation
 
 Windows compilation is not available at the moment, Olde is developed under Fedora Linux

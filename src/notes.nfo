@@ -51,6 +51,7 @@ version history:
 0.0.7b- basic networking implemented - testing begins
       - small bug fixes
 0.0.8 - added networked map - server sends map to player
+      - 
 
 ongoing testing:
 - tilebased rendering system via MapTools class - prototype is done
@@ -61,7 +62,6 @@ ongoing testing:
 - collisions and interactions between player and world map
 - [EDITOR] dynamic map resize, spawn points
 - main menu / pause menu
-- [HOST] networked map - send over to player every packet tick
 
 in progress:
 - menu graphical overhaul and functionality
@@ -70,9 +70,13 @@ in progress:
 - [EDITOR] pallete rework
 - [EDITOR] help menu with keyboard layout
 - ENet implementation
+- [HOST] networked map - send over to player every packet tick
+            map sending is glitching bc players frame wants to write memory basing on short unsynced time
+            between server and client
+            needs to be fixed!
 
 to do:
-- [NETWORK] interpolation of network entites
+- [NETWORK] interpolation of network entites and map
 - [GAME/NETWORK] picking up objects, using items, opening doors etc etc
 - prepare connection lobby menu
 - main menu graphics (background and sprites ?)

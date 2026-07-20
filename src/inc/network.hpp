@@ -37,6 +37,8 @@ struct NetworkClientInfo
     float y;                    // 10
     uint16_t posx;
     uint16_t posy;
+    uint16_t act_posx;
+    uint16_t act_posy;
     float dx;
     float dy;
 };

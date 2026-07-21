@@ -79,6 +79,8 @@ void NetworkHost::NetworkHostService(MapTools &OldeMap)
                     Clients[playerId].Active=true;
                     Clients[playerId].ValidPosition=false;
                     Clients[playerId].Peer=event.peer;
+                    Clients[playerId].avatar=(uint8_t)GetRandomValue(0,3);
+                    
 
                     int spawn_point=GetRandomValue(0,3);
                     uint16_t givex=0;
@@ -108,7 +110,7 @@ void NetworkHost::NetworkHostService(MapTools &OldeMap)
 
                     printf("Client %d spawned at: x%d y%d\n",playerId,givex,givey);
 
-                    uint8_t buffer[10]{};
+                    uint8_t buffer[12]{};
                     buffer[0]=AssignClientNumber; // send this info to connecting peer
                     buffer[1]=(uint8_t)playerId; // with number
                     memcpy(&buffer[2],&givex,sizeof(uint16_t));
@@ -117,6 +119,11 @@ void NetworkHost::NetworkHostService(MapTools &OldeMap)
                     uint16_t mapy=OldeMap.EditorGetMaxY();
                     memcpy(&buffer[6],&mapx,sizeof(uint16_t));
                     memcpy(&buffer[8],&mapy,sizeof(uint16_t));
+                    buffer[10]=Clients[playerId].avatar;
+                    printf("send him a %d\n",Clients[playerId].avatar);
+
+                    // CLEAN UP THIS MESS!!!!
+                    // MOVE IT TO CLASS TEMPLATE FOR EVERY TYPE
 
                     uint8_t buffer_for_actives[2]{};
                     buffer_for_actives[0]=NewPlayer; //send this info to already connected clients
@@ -164,7 +171,7 @@ void NetworkHost::NetworkHostService(MapTools &OldeMap)
                     Clients[playerId].hands=event.packet->data[3];
                     Clients[playerId].backpack_slot0=event.packet->data[4];
                     Clients[playerId].backpack_slot1=event.packet->data[5];
-                    Clients[playerId].backpack_slot2=event.packet->data[6];
+                    Clients[playerId].avatar=event.packet->data[6];
                     memcpy(&Clients[playerId].x,&event.packet->data[7],sizeof(float));
                     memcpy(&Clients[playerId].y,&event.packet->data[11],sizeof(float));
                     memcpy(&Clients[playerId].posx,&event.packet->data[15],sizeof(uint16_t));

@@ -4,7 +4,7 @@ this is res.nfo file
 
 with all useful information about those assets.
 
-First of all, assets are from https://ittaimanero.itch.io/zombie-apocalypse-tileset
+First of all, assets are from https://opengameart.org/content/simple-broad-purpose-tileset
 and have been modified to be used easily within rectangle rendering system.
 
 -====================INFO====================-
@@ -22,18 +22,11 @@ for example:
 20-29 = second row of walls
 30... = etc...
 
--===================NOTES====================-
-Concept idea for world map animation is to have 6 frames located at x0 tile in texture file
-float d_time counts as high to 3 seconds, so rendering smooth animations can be achived with testing between whole seconds.
-
-
-
 -=================CHANGES====================-
 Changes
 
-1.0.0 - https://ittaimanero.itch.io/zombie-apocalypse-tileset
+1.0.0 - https://opengameart.org/content/simple-broad-purpose-tileset
 1.0.1 - avatars.png is now using 160 pixel width format for simple count inside game engine
 1.0.2 - changed walls.png to ground.png
 1.0.3 - created new menu.png asset png (menu uses 64x64 tilesize due to no zoom parameter in DrawRectangleRec())
-      - new objects.png and roofs.png
       - added editor_help.png

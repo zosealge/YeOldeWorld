@@ -1,13 +1,4 @@
-//   ___    ___ _______   ________  ___       ________  _______   ___       __   ________  ________  ___       ________  _______      
-//  |\  \  /  /|\  ___ \ |\   __  \|\  \     |\   ___ \|\  ___ \ |\  \     |\  \|\   __  \|\   __  \|\  \     |\   ___ \|\  ___ \     
-//  \ \  \/  / | \   __/|\ \  \|\  \ \  \    \ \  \_|\ \ \   __/|\ \  \    \ \  \ \  \|\  \ \  \|\  \ \  \    \ \  \_|\ \ \   __/|    
-//   \ \    / / \ \  \_|/_\ \  \\\  \ \  \    \ \  \ \\ \ \  \_|/_\ \  \  __\ \  \ \  \\\  \ \   _  _\ \  \    \ \  \ \\ \ \  \_|/__  
-//    \/  /  /   \ \  \_|\ \ \  \\\  \ \  \____\ \  \_\\ \ \  \_|\ \ \  \|\__\_\  \ \  \\\  \ \  \\  \\ \  \____\ \  \_\\ \ \  \_|\ \ 
-//  __/  / /      \ \_______\ \_______\ \_______\ \_______\ \_______\ \____________\ \_______\ \__\\ _\\ \_______\ \_______\ \_______\
-// |\___/ /        \|_______|\|_______|\|_______|\|_______|\|_______|\|____________|\|_______|\|__|\|__|\|_______|\|_______|\|_______|
-// \|___|/                                                                                                                            
-                                                                                                                                   
-                                                                                                                                   
+                                                                                                                                  
 // YeOldeWorld Game Client
 
 // there is no enums or something like that yet
@@ -201,13 +192,10 @@ int main()
     return 0;
 }
 
-// _________ .__  .__               __   
-// \_   ___ \|  | |__| ____   _____/  |_ 
-// /    \  \/|  | |  |/ __ \ /    \   __\
-// \     \___|  |_|  \  ___/|   |  \  |  
-//  \______  /____/__|\___  >___|  /__|  
-//         \/             \/     \/       
-                                                               
+// CCCCC L     I EEEEE NN   N TTTTTTT
+// C     L     I E     N N  N    T
+// C     L     I EEE   N  N N    T
+// CCCCC LLLLL I EEEEE N   NN    T                                                   
 
 int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &OldeNet,float &d_time)
 {
@@ -216,7 +204,7 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
 
     Game_Player OldePlayer;
     
-    float speed_player_move=0.1f; // move this to player class
+    float speed_player_move=0.5f; // move this to player class
     // float speed_camera_movement=0.2f;
     Vector2 localplayer_pointer_pos{};
     // Vector2 camera_localplayer_pos{};
@@ -270,6 +258,8 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
             OldePlayer.pl_pointer_pos[i]=OldeNet.Clients[i].Position;
             OldePlayer.pl_dir[i]=OldeNet.Clients[i].direction;
             OldePlayer.pl_act[i]=OldeNet.Clients[i].action;
+            OldePlayer.pl_avatar[i]=OldeNet.Clients[i].avatar;
+            OldePlayer.pl_side[i]=0;
         }
     }
 
@@ -362,17 +352,12 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
 
         if(IsKeyDown(KEY_LEFT_SHIFT) && !show_menu)
         {
+            speed_player_move=1.0f;
+        }
+
+        if(IsKeyUp(KEY_LEFT_SHIFT))
+        {
             speed_player_move=0.5f;
-        }
-
-        if(IsKeyDown(KEY_LEFT_CONTROL) && !show_menu)
-        {
-            speed_player_move=2.0f;
-        }
-
-        if(IsKeyUp(KEY_LEFT_SHIFT) && IsKeyUp(KEY_LEFT_CONTROL))
-        {
-            speed_player_move=0.1f;
         }
 
         if(IsKeyPressed(KEY_SPACE) && !show_menu)
@@ -433,7 +418,7 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
                 OldeMap.GameCheckCollision(OldePlayer,debug_mode,speed_player_move);
                 OldePlayer.DrawLocalPlayer(OldeAssets,d_time,debug_mode);
                 
-                OldePlayer.DrawNetworkPlayer(OldeAssets,d_time);
+                // OldePlayer.DrawNetworkPlayer(OldeAssets,d_time);
 
                 // if(!debug_hide_objects) OldeMap.DrawObjects(OldeAssets,d_time,render,debug_mode);
                 // OldeMap.DrawRoofs(OldeAssets,OldePlayer.pl_pointer_pos[local_player_id],d_time,render,debug_mode);

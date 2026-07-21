@@ -132,10 +132,22 @@ void NetworkClient::Update(double now,float deltaT,MapTools &OldeMap)
                         Clients[RemotePlayer].hands=event.packet->data[3];
                         Clients[RemotePlayer].backpack_slot0=event.packet->data[4];
                         Clients[RemotePlayer].backpack_slot1=event.packet->data[5];
-                        Clients[RemotePlayer].backpack_slot2=event.packet->data[6];
+                        Clients[RemotePlayer].avatar=event.packet->data[6];
                         memcpy(&Clients[RemotePlayer].Position.x,&event.packet->data[7],sizeof(float));
                         memcpy(&Clients[RemotePlayer].Position.y,&event.packet->data[11],sizeof(float));
+
                     }
+
+
+
+
+
+                    // is this all needs to be inside switch case ?
+                    // rework those as separate functions ?
+
+
+
+
 
                     if(RemotePlayer==LocalPlayerId) // if the sender peer is the same as reciving
                                                     // then it means it can be a map part from server
@@ -224,6 +236,8 @@ void NetworkClient::Update(double now,float deltaT,MapTools &OldeMap)
                             uint16_t mapy=0;
                             memcpy(&mapx,&event.packet->data[6],sizeof(uint16_t));
                             memcpy(&mapy,&event.packet->data[8],sizeof(uint16_t));
+                            Clients[LocalPlayerId].avatar=event.packet->data[10];
+                            printf("Ive got a %d\n",Clients[LocalPlayerId].avatar);
 
                             OldeMap.GameSetMapSize(mapx,mapy);
 
@@ -258,6 +272,10 @@ void NetworkClient::Update(double now,float deltaT,MapTools &OldeMap)
                 server=nullptr;
                 server_disconnect=true;
                 LocalPlayerId=-1;
+                for(int i=0;i<max_clients;i++)
+                {
+                    ZeroRemoteClient(i);
+                }
             break;
         }
     }
@@ -284,6 +302,10 @@ void NetworkClient::Disconnect()
     if(!disconnected)
     {
         enet_peer_reset(server);
+    }
+    for(int i=0;i<max_clients;i++)
+    {
+        ZeroRemoteClient(i);
     }
 }
 

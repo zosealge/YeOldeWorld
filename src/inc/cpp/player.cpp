@@ -5,8 +5,6 @@ Game_Player::Game_Player()
     local_use=false;
     local_player_pos.x=0;
     local_player_pos.y=0;
-    current_tile_left=0;
-    current_tile_right=current_tile_left+50;
     current_draw_offset=0;
     local_collision.x=0;
     local_collision.y=0;
@@ -48,49 +46,56 @@ void Game_Player::DrawLocalPlayer(Game_Assets &OldeAssets,float &d_time,bool deb
         DrawRectanglePro(local_collision,(Vector2){0,0},0.0f,RED);
     }
 
+    if(d_time>0.0 && d_time<0.5) current_draw_offset=0;
+    if(d_time>0.5 && d_time<1.0) current_draw_offset=1;
+    if(d_time>1.0 && d_time<1.5) current_draw_offset=0;
+    if(d_time>1.5 && d_time<2.0) current_draw_offset=1;
+    if(d_time>2.0 && d_time<2.5) current_draw_offset=0;
+    if(d_time>2.5 && d_time<3.0) current_draw_offset=1;
 
-    if(d_time>0.0 && d_time<0.5) current_draw_offset=1;
-    if(d_time>0.5 && d_time<1.0) current_draw_offset=2;
-    if(d_time>1.0 && d_time<1.5) current_draw_offset=1;
-    if(d_time>1.5 && d_time<2.0) current_draw_offset=2;
-    if(d_time>2.0 && d_time<2.5) current_draw_offset=1;
-    if(d_time>2.5 && d_time<3.0) current_draw_offset=2;
-
-    if(pl_dir[player_num]=='w' || pl_dir[player_num]=='q' || pl_dir[player_num]=='e')
+    if(pl_dir[player_num]=='q' || pl_dir[player_num]=='a' || pl_dir[player_num]=='z')
     {
-        if(pl_act[player_num]=='w')
-        {
-            DrawTextureRec(OldeAssets.AvatarsSprite,tiles[0+current_draw_offset],local_player_pos,WHITE);
-        }
-        else DrawTextureRec(OldeAssets.AvatarsSprite,tiles[0],local_player_pos,WHITE);
+        pl_side[player_num]=0;
+    }
+    if(pl_dir[player_num]=='e' || pl_dir[player_num]=='d' || pl_dir[player_num]=='c')
+    {
+        pl_side[player_num]=4;
+    }
+    int avatar_offset=0;
+    if(pl_avatar[player_num]==0) avatar_offset=0;
+    else if(pl_avatar[player_num]==1) avatar_offset=40;
+    else if(pl_avatar[player_num]==2) avatar_offset=80;
+    else if(pl_avatar[player_num]==3) avatar_offset=120;
+    else avatar_offset=0;
+
+    int offset=0;
+
+    if(pl_act[player_num]=='w')
+    {
+        offset=avatar_offset+pl_side[player_num]+10;
+        DrawTextureRec(OldeAssets.AvatarsSprite,tiles[offset+current_draw_offset],local_player_pos,WHITE);
+    }
+    else
+    {
+        offset=avatar_offset+pl_side[player_num];
+        DrawTextureRec(OldeAssets.AvatarsSprite,tiles[offset],local_player_pos,WHITE);
     }
 
-    if(pl_dir[player_num]=='x' || pl_dir[player_num]=='z' || pl_dir[player_num]=='c')
-    {
-        if(pl_act[player_num]=='w')
-        {
-            DrawTextureRec(OldeAssets.AvatarsSprite,tiles[10+current_draw_offset],local_player_pos,WHITE);
-        }
-        else DrawTextureRec(OldeAssets.AvatarsSprite,tiles[10],local_player_pos,WHITE);
-    }
+    // avatars only can look left or right
+    // so keys "w" and "s" should not modify direction of rendering
 
-    if(pl_dir[player_num]=='a')
-    {
-        if(pl_act[player_num]=='w')
-        {
-            DrawTextureRec(OldeAssets.AvatarsSprite,tiles[20+current_draw_offset],local_player_pos,WHITE);
-        }
-        else DrawTextureRec(OldeAssets.AvatarsSprite,tiles[20],local_player_pos,WHITE);
-    }
+    // int offset=0;
 
-    if(pl_dir[player_num]=='d')
-    {
-        if(pl_act[player_num]=='w')
-        {
-            DrawTextureRec(OldeAssets.AvatarsSprite,tiles[30+current_draw_offset],local_player_pos,WHITE);
-        }
-        else DrawTextureRec(OldeAssets.AvatarsSprite,tiles[30],local_player_pos,WHITE);
-    }
+    // if(pl_act[player_num]=='w')
+    // {
+    //     offset=pl_avatar[player_num]+pl_side[player_num]+1;
+    //     DrawTextureRec(OldeAssets.AvatarsSprite,tiles[offset+current_draw_offset],local_player_pos,WHITE);
+    // }
+    // else
+    // {
+    //     offset=pl_avatar[player_num]+pl_side[player_num];
+    //     DrawTextureRec(OldeAssets.AvatarsSprite,tiles[offset],local_player_pos,WHITE);
+    // }
 
     // might move this animation to debug menu - for now lets keep it on top to check collisions and interactions
     if(debug_mode)
@@ -108,6 +113,7 @@ void Game_Player::DrawLocalPlayer(Game_Assets &OldeAssets,float &d_time,bool deb
 }
 
 void Game_Player::DrawNetworkPlayer(Game_Assets &OldeAssets,float &d_time)
+// that means local player too
 {
     if(d_time>0.0 && d_time<0.5) current_draw_offset=1;
     if(d_time>0.5 && d_time<1.0) current_draw_offset=2;
@@ -118,7 +124,7 @@ void Game_Player::DrawNetworkPlayer(Game_Assets &OldeAssets,float &d_time)
 
     for(int i=0;i<max_clients;i++)
     {
-        if(pl_active[i]==true)
+        if(pl_active[i]==true) // && pl_active[i]!=player_num)
         {
             if(pl_dir[i]=='w' || pl_dir[i]=='q' || pl_dir[i]=='e')
             {

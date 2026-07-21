@@ -13,7 +13,7 @@ class NetworkHost
     ENetHost    *server;
     ENetAddress address{};
 
-    NetworkClientInfo Clients[max_clients]{};
+    ServerInfo Clients[max_clients]{};
     int who_is_talking_now=0;
 
     bool NetworkInitialize();

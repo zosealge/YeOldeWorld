@@ -24,7 +24,7 @@ const size_t map_offset_start_t=6;
 const enet_uint32 network_host_timeout=5;
 
 
-struct NetworkClientInfo // SERVER STRUCTURE - MAKE A BETTER STRUCT NAME!!!
+struct ServerInfo
 {
     bool Active; // is player slot active
     bool ValidPosition; 
@@ -35,6 +35,7 @@ struct NetworkClientInfo // SERVER STRUCTURE - MAKE A BETTER STRUCT NAME!!!
     uint8_t backpack_slot0;     // 3
     uint8_t backpack_slot1;     // 4
     uint8_t backpack_slot2;     // 5
+    uint8_t avatar;
     float x;                    // 6
     float y;                    // 10
     uint16_t posx;
@@ -45,7 +46,7 @@ struct NetworkClientInfo // SERVER STRUCTURE - MAKE A BETTER STRUCT NAME!!!
     float dy;
 };
 
-struct NetworkRemoteClientInfo // CLIENT STRUCTURE - MAKE A BETTER STRUCT NAME!!!
+struct ClientInfo
 {
     bool Active;
     Vector2 Position;
@@ -57,10 +58,12 @@ struct NetworkRemoteClientInfo // CLIENT STRUCTURE - MAKE A BETTER STRUCT NAME!!
     uint8_t backpack_slot0;
     uint8_t backpack_slot1;
     uint8_t backpack_slot2;
+    uint8_t avatar;
     uint16_t posx;
     uint16_t posy;
     uint16_t act_posx;
     uint16_t act_posy;
+
 };
 
 struct MapFrame

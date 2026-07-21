@@ -5,20 +5,6 @@ RAY = src/libraylib.a -lGL -lm -lpthread -ldl -lrt -lX11
 NET = src/libenet.a
 
 
-main:
-	clear
-	$(CC) -c src/inc/cpp/assets.cpp $(FLG)
-	$(CC) -c src/inc/cpp/camera.cpp $(FLG)
-	$(CC) -c src/inc/cpp/data.cpp $(FLG)
-	$(CC) -c src/inc/cpp/edittools.cpp $(FLG)
-	$(CC) -c src/inc/cpp/gui.cpp $(FLG)
-	$(CC) -c src/inc/cpp/maptools.cpp $(FLG)
-	$(CC) -c src/inc/cpp/menu.cpp $(FLG)
-	$(CC) -c src/inc/cpp/networkclient.cpp $(FLG)
-	$(CC) -c src/inc/cpp/networkhost.cpp $(FLG)
-	$(CC) -c src/inc/cpp/player.cpp $(FLG)
-	echo OK
-
 debug:
 	clear
 	$(CC) -g -c src/inc/cpp/assets.cpp $(FLG)

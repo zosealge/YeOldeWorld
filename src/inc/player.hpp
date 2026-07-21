@@ -1,5 +1,6 @@
 #pragma once
 #include"raylib.h"
+#include<iostream>
 #include"assets.hpp"
 #include"network.hpp"
 
@@ -10,8 +11,10 @@ class Game_Player
     const int pngarraywidth=10;
     const int pngarrayheight=60;
     int player_num;
+    char pl_avatar[max_clients]{};
     char pl_dir[max_clients]{};
     char pl_act[max_clients]{};
+    uint8_t pl_side[max_clients]{};
     Vector2 pl_pointer_pos[max_clients]{};
     bool pl_active[max_clients]{};
     Rectangle local_collision;
@@ -34,8 +37,7 @@ class Game_Player
     void SetPlayerNumber(int num);
 
     private:
-    int current_tile_left;
-    int current_tile_right;
+    int pl_avatar_offset[max_clients]{};
     int current_draw_offset;
     Vector2 local_player_pos;
     Rectangle tiles[700]; // 60x10=600 but with extra space just in case

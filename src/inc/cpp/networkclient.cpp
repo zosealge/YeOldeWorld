@@ -42,15 +42,17 @@ void NetworkClient::NetworkDeinitialize()
 // 
 // 
 
-bool NetworkClient::NetworkConnectToHost(std::string what_address)
+bool NetworkClient::NetworkConnectToHost(std::string what_address,uint8_t selected_avatar)
 {
+    LocalPlayerAvatar=selected_avatar;
     LastNow=0;
     LastInputSend=-100;
     InputUpdateInterval=1.0f/20.0f;
     enet_address_set_host(&address,what_address.c_str());
+    enet_uint32 buffer=(enet_uint32)selected_avatar;
     server=enet_host_connect(client,&address,
         max_channels, // channelCount
-        0); // optional data to send when connecting - uses enet_uint32
+        buffer); // optional data to send when connecting - uses enet_uint32
     if(server==nullptr)
     {
         printf("enet_host_connect() failed!\n");
@@ -75,7 +77,7 @@ bool NetworkClient::NetworkConnectToHost(std::string what_address)
     }
 }
 
-void NetworkClient::Update(double now,float deltaT,MapTools &OldeMap)
+void NetworkClient::Update(double now,float deltaT,MapTools &OldeMap,Game_Player &OldePlayer)
 {
     LastNow=now;
 
@@ -99,10 +101,11 @@ void NetworkClient::Update(double now,float deltaT,MapTools &OldeMap)
         game_buffer[4]=Clients[LocalPlayerId].backpack_slot0;
         game_buffer[5]=Clients[LocalPlayerId].backpack_slot1;
         game_buffer[6]=Clients[LocalPlayerId].backpack_slot2;
-        memcpy(&game_buffer[7],&Clients[LocalPlayerId].Position.x,sizeof(float));
-        memcpy(&game_buffer[11],&Clients[LocalPlayerId].Position.y,sizeof(float));
-        memcpy(&game_buffer[15],&Clients[LocalPlayerId].posx,sizeof(uint16_t));
-        memcpy(&game_buffer[17],&Clients[LocalPlayerId].posy,sizeof(uint16_t));
+        game_buffer[7]=Clients[LocalPlayerId].avatar;
+        memcpy(&game_buffer[8],&Clients[LocalPlayerId].Position.x,sizeof(float));
+        memcpy(&game_buffer[12],&Clients[LocalPlayerId].Position.y,sizeof(float));
+        memcpy(&game_buffer[16],&Clients[LocalPlayerId].posx,sizeof(uint16_t));
+        memcpy(&game_buffer[18],&Clients[LocalPlayerId].posy,sizeof(uint16_t));
 
         ENetPacket *packet=enet_packet_create(game_buffer,sizeof(game_buffer),ENET_PACKET_FLAG_RELIABLE);
         
@@ -117,6 +120,7 @@ void NetworkClient::Update(double now,float deltaT,MapTools &OldeMap)
         switch(event.type)
         {
             case ENET_EVENT_TYPE_RECEIVE:
+            receive_packet=true;
             {
                 if(event.packet->dataLength<1) break;
 
@@ -132,9 +136,10 @@ void NetworkClient::Update(double now,float deltaT,MapTools &OldeMap)
                         Clients[RemotePlayer].hands=event.packet->data[3];
                         Clients[RemotePlayer].backpack_slot0=event.packet->data[4];
                         Clients[RemotePlayer].backpack_slot1=event.packet->data[5];
-                        Clients[RemotePlayer].avatar=event.packet->data[6];
-                        memcpy(&Clients[RemotePlayer].Position.x,&event.packet->data[7],sizeof(float));
-                        memcpy(&Clients[RemotePlayer].Position.y,&event.packet->data[11],sizeof(float));
+                        Clients[RemotePlayer].backpack_slot1=event.packet->data[6];
+                        Clients[RemotePlayer].avatar=event.packet->data[7];
+                        memcpy(&Clients[RemotePlayer].Position.x,&event.packet->data[8],sizeof(float));
+                        memcpy(&Clients[RemotePlayer].Position.y,&event.packet->data[12],sizeof(float));
 
                     }
 
@@ -236,8 +241,7 @@ void NetworkClient::Update(double now,float deltaT,MapTools &OldeMap)
                             uint16_t mapy=0;
                             memcpy(&mapx,&event.packet->data[6],sizeof(uint16_t));
                             memcpy(&mapy,&event.packet->data[8],sizeof(uint16_t));
-                            Clients[LocalPlayerId].avatar=event.packet->data[10];
-                            printf("Ive got a %d\n",Clients[LocalPlayerId].avatar);
+                            // Clients[LocalPlayerId].avatar=event.packet->data[10];
 
                             OldeMap.GameSetMapSize(mapx,mapy);
 
@@ -277,6 +281,9 @@ void NetworkClient::Update(double now,float deltaT,MapTools &OldeMap)
                     ZeroRemoteClient(i);
                 }
             break;
+
+            default:
+            break;
         }
     }
 }
@@ -297,6 +304,9 @@ void NetworkClient::Disconnect()
             case ENET_EVENT_TYPE_DISCONNECT:
                 disconnected=true;
             break;
+
+            default:
+            break;
         }
     }
     if(!disconnected)
@@ -312,7 +322,9 @@ void NetworkClient::Disconnect()
 int NetworkClient::GetLocalPlayerId(){return LocalPlayerId;}
 bool NetworkClient::Connected(){return server!=nullptr && LocalPlayerId>=0;}
 
-void NetworkClient::PrepareLocalClient(const Vector2 &pos,const uint8_t dir,const uint8_t act,uint16_t posx,uint16_t posy)
+
+// HAS TO BE BETTER WAY... THAN THIS FUNCTION
+void NetworkClient::PrepareLocalClient(const Vector2 &pos,const uint8_t dir,const uint8_t act,uint16_t posx,uint16_t posy,uint8_t av_number)
 {
     Clients[LocalPlayerId].Position.x=pos.x;
     Clients[LocalPlayerId].Position.y=pos.y;
@@ -322,6 +334,7 @@ void NetworkClient::PrepareLocalClient(const Vector2 &pos,const uint8_t dir,cons
     Clients[LocalPlayerId].backpack_slot0=0;
     Clients[LocalPlayerId].backpack_slot1=0;
     Clients[LocalPlayerId].backpack_slot2=0;
+    Clients[LocalPlayerId].avatar=av_number;
     Clients[LocalPlayerId].posx=posx;
     Clients[LocalPlayerId].posy=posy;
     Clients[LocalPlayerId].act_posx=posx;

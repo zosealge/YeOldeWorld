@@ -26,29 +26,28 @@
 #include"inc/player.hpp"
 #include"inc/maptools.hpp"
 
-struct Vector2_int
-{
-    int x;
-    int y;
-};
-
 int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &OldeNet,float &d_time);
 
-//    _____                       
-//   /     \   ____   ____  __ __ 
-//  /  \ /  \_/ __ \ /    \|  |  \
-// /    Y    \  ___/|   |  \  |  /
-// \____|__  /\___  >___|  /____/ 
-//         \/     \/     \/       
+//  M   M EEEE N   N U   U
+//  MM MM E    NN  N U   U
+//  M M M EEE  N N N U   U
+//  M   M E    N  NN U   U
+//  M   M EEEE N   N  UUU 
+
 int main()
 {
     const std::string   OldeTitle="Olde";
     Game_Data           OldeSettings;
+    if(!OldeSettings.IsConfigValid())
+    {
+        return -1;
+    }
     NetworkClient       OldeNet;
     // Because YeOldeWorlde is build as a multiplayer game
     // every function needs to be considered as relevant to host communication
     InitWindow(OldeSettings.main_screen_width,OldeSettings.main_screen_height,OldeTitle.c_str());
     Game_Menu           OldeMenu(2);
+    OldeMenu.PassIpAddress(OldeSettings.ip_address);
     Game_Assets         OldeAssets;
     SetTargetFPS(OldeSettings.set_max_fps);
     bool main_game=true;
@@ -147,8 +146,8 @@ int main()
             default:
                 if(OldeMenu.public_display_load_menu)
                 {
-                    OldeMenu.AcceptMap(OldeSettings,rc_menu);
-                    printf("OLDE: accepted map > %s\n",OldeSettings.current_map.c_str());
+                    // OldeMenu.AcceptMap(OldeSettings,rc_menu);
+                    // printf("OLDE: accepted map > %s\n",OldeSettings.current_map.c_str());
                     OldeSettings.editor_new_map=false;
                     OldeMenu.public_display_load_menu=false;
                     OldeMenu.public_display_main_menu=true;
@@ -162,10 +161,10 @@ int main()
         {
             if(OldeSettings.IsAddrIPNotEmpty())
             {
-                OldeSettings.current_map="test.map";
+                uint8_t selected_avatar=2;
                 OldeSettings.connection_to_host=true;
                 OldeMenu.ShowLoading(OldeAssets,OldeSettings,"Connecting");
-                if(OldeNet.NetworkConnectToHost(OldeSettings.GetAddrIP()))
+                if(OldeNet.NetworkConnectToHost(OldeSettings.GetAddrIP(),selected_avatar))
                 {
                     Set_Game(OldeAssets,OldeSettings,OldeNet,d_time);
                     OldeMenu.public_display_connect_menu=false;
@@ -192,10 +191,11 @@ int main()
     return 0;
 }
 
-// CCCCC L     I EEEEE NN   N TTTTTTT
-// C     L     I E     N N  N    T
-// C     L     I EEE   N  N N    T
-// CCCCC LLLLL I EEEEE N   NN    T                                                   
+//   CCC L    III EEEE N   N TTTTTT
+//  C    L     I  E    NN  N   TT  
+//  C    L     I  EEE  N N N   TT  
+//  C    L     I  E    N  NN   TT  
+//   CCC LLLL III EEEE N   N   TT                                                  
 
 int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &OldeNet,float &d_time)
 {
@@ -226,7 +226,6 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
 
     bool local_player_action=false;
     int secret_rc=0;
-    int local_spawn_point_num=-1;
     int local_player_id=-1; // this number will be assigned by server
                             // for testing purposes
                             // same value will be used
@@ -246,7 +245,7 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
     {
         // check all the incoming packets and dipatch
         // network commands before game loop starts
-        OldeNet.Update(GetTime(),GetFrameTime(),OldeMap);
+        OldeNet.Update(GetTime(),GetFrameTime(),OldeMap,OldePlayer);
     }
     
     for(int i=0;i<max_clients;i++)
@@ -266,7 +265,7 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
 
 
     local_player_id=OldeNet.LocalPlayerId;
-    OldePlayer.SetPlayerNumber(OldeNet.LocalPlayerId);
+    OldePlayer.SetLocalPlayerNumber(OldeNet.LocalPlayerId,OldeNet.LocalPlayerAvatar);
 
 
     render.x=OldeSettings.xrender*tilesize;
@@ -287,6 +286,8 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
     // OldeCam.cam.target.y=localplayer_pointer_pos.y-32;
 
     // Initialize network ahead
+
+    bool auto_move=false;
 
     while(game_window)
     {
@@ -368,7 +369,16 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
 
         if(IsKeyPressed(KEY_INSERT))
         {
-            print_states=true;
+            auto_move=true;
+        }
+
+        if(auto_move) // TEST ONLY
+        {
+            OldePlayer.pl_pointer_pos[local_player_id].x+=speed_player_move;
+            OldePlayer.pl_dir[local_player_id]='d';
+            OldePlayer.pl_act[local_player_id]='d';
+            local_player_action=true;
+            if(OldePlayer.pl_pointer_pos[local_player_id].y<0.0) OldePlayer.pl_pointer_pos[local_player_id].y=0.0;
         }
 
         OldePlayer.MoveLocalPlayer(OldePlayer.pl_pointer_pos[local_player_id]);
@@ -391,7 +401,8 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
         OldeNet.PrepareLocalClient(OldePlayer.pl_pointer_pos[local_player_id],
                                   OldePlayer.pl_dir[local_player_id],
                                   OldePlayer.pl_act[local_player_id],
-                                  OldePlayer.cur_x,OldePlayer.cur_y);
+                                  OldePlayer.cur_x,OldePlayer.cur_y,
+                                  OldePlayer.pl_avatar[local_player_id]);
                             
         for(int i=0;i<max_clients;i++)
         {
@@ -402,23 +413,20 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
                 OldePlayer.pl_pointer_pos[i]=OldeNet.Clients[i].Position;
                 OldePlayer.pl_dir[i]=OldeNet.Clients[i].direction;
                 OldePlayer.pl_act[i]=OldeNet.Clients[i].action;
+                OldePlayer.pl_avatar[i]=OldeNet.Clients[i].avatar;
             }
         }
                             
-        // OldeNet.Update(GetTime(),GetFrameTime(),OldeMap);
+        OldeNet.Update(GetTime(),GetFrameTime(),OldeMap,OldePlayer);
         
         BeginDrawing();
             ClearBackground(BLACK);
 
             BeginMode2D(OldeCam.cam);
                 OldeMap.DrawMap(OldeAssets,d_time,render,debug_mode);
-                OldeNet.Update(GetTime(),GetFrameTime(),OldeMap); // first draw map!
-                                                                    // then get updates from network
-                                                                    // and redraw map window
                 OldeMap.GameCheckCollision(OldePlayer,debug_mode,speed_player_move);
-                OldePlayer.DrawLocalPlayer(OldeAssets,d_time,debug_mode);
-                
-                // OldePlayer.DrawNetworkPlayer(OldeAssets,d_time);
+                // OldePlayer.DrawLocalPlayer(OldeAssets,d_time,debug_mode);
+                OldePlayer.DrawPlayers(OldeAssets,d_time);
 
                 // if(!debug_hide_objects) OldeMap.DrawObjects(OldeAssets,d_time,render,debug_mode);
                 // OldeMap.DrawRoofs(OldeAssets,OldePlayer.pl_pointer_pos[local_player_id],d_time,render,debug_mode);

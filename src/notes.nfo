@@ -50,10 +50,15 @@ version history:
       - added connection/disconnection logic and client buffers
 0.0.7b- basic networking implemented - testing begins
       - small bug fixes
-0.0.8 - added networked map - server sends map to player
+0.0.8 - added networked map - server sends map to player every network tick (details in notes)
       - fixed map tearing glitch
       - changes to avatar sets and drawing players (local and network)
-      - [HOST] added cfg parser with (yet) simple configuration
+      - added basic avatar selection (hardcoded)
+      - packet construction cleanup
+      - added config files with parsers to host and client
+      - main menu code cleanup
+      - compiler warnings cleanup
+
 
 ongoing testing:
 - tilebased rendering system via MapTools class - prototype is done
@@ -73,7 +78,7 @@ in progress:
 - [EDITOR] help menu with keyboard layout
 - ENet implementation
 - [HOST] networked map - send over to player every packet tick
-- [GAME] drawing players local (network players are not drawn at the moment)
+- [GAME] drawing players with theirs selected avatars
 
 to do:
 - [NETWORK] interpolation of network entites and map
@@ -82,10 +87,13 @@ to do:
 - main menu graphics (background and sprites ?)
 - [GAME] adjust camera speed following player with rubberbanding
 - proper error handling of initialize map/objects/roofs xy arrays dynamic memory
+- enet_uint32 coded client version to send host for check
 
 roadmap:
 0.0.6 to 0.0.9 - bug fixes and preparation for network library
 0.1.0 - proper networking system based on ENet - with players and network entities
+      - basic world interaction (opening doors, picking up objects)
+0.1.5 - network sending to player only map and near entities to use as less packet size as possible
 0.2.0 - audio assets implementation
 and more to come
 
@@ -111,5 +119,6 @@ CPU: - 7.7 ~ 8.4 usage (same for both graphical modes)
 
 basic connection / disconnection is working
 player number assign by host
+avatar assigned by client and send to host
 sending/receiving commands to open doors use objects, sending hit signals (weapons use)
 

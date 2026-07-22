@@ -112,80 +112,129 @@ void Game_Player::DrawLocalPlayer(Game_Assets &OldeAssets,float &d_time,bool deb
     }
 }
 
-void Game_Player::DrawNetworkPlayer(Game_Assets &OldeAssets,float &d_time)
+void Game_Player::DrawPlayers(Game_Assets &OldeAssets,float &d_time)
 // that means local player too
 {
-    if(d_time>0.0 && d_time<0.5) current_draw_offset=1;
-    if(d_time>0.5 && d_time<1.0) current_draw_offset=2;
-    if(d_time>1.0 && d_time<1.5) current_draw_offset=1;
-    if(d_time>1.5 && d_time<2.0) current_draw_offset=2;
-    if(d_time>2.0 && d_time<2.5) current_draw_offset=1;
-    if(d_time>2.5 && d_time<3.0) current_draw_offset=2;
+    if(d_time>0.0 && d_time<0.5) current_draw_offset=0;
+    if(d_time>0.5 && d_time<1.0) current_draw_offset=1;
+    if(d_time>1.0 && d_time<1.5) current_draw_offset=0;
+    if(d_time>1.5 && d_time<2.0) current_draw_offset=1;
+    if(d_time>2.0 && d_time<2.5) current_draw_offset=0;
+    if(d_time>2.5 && d_time<3.0) current_draw_offset=1;
 
     for(int i=0;i<max_clients;i++)
     {
-        if(pl_active[i]==true) // && pl_active[i]!=player_num)
+        if(pl_active[i]==true)
         {
-            if(pl_dir[i]=='w' || pl_dir[i]=='q' || pl_dir[i]=='e')
+            if(pl_dir[i]=='q' || pl_dir[i]=='a' || pl_dir[i]=='z')
             {
-                if(pl_act[i]=='w')
-                {
-                    DrawTextureRec(OldeAssets.AvatarsSprite,tiles[0+current_draw_offset],pl_pointer_pos[i],WHITE);
-                }
-                else DrawTextureRec(OldeAssets.AvatarsSprite,tiles[0],pl_pointer_pos[i],WHITE);
+                pl_side[i]=0;
             }
-            if(pl_dir[i]=='x' || pl_dir[i]=='z' || pl_dir[i]=='c')
+            if(pl_dir[i]=='e' || pl_dir[i]=='d' || pl_dir[i]=='c')
             {
-                if(pl_act[i]=='w')
-                {
-                    DrawTextureRec(OldeAssets.AvatarsSprite,tiles[10+current_draw_offset],pl_pointer_pos[i],WHITE);
-                }
-                else DrawTextureRec(OldeAssets.AvatarsSprite,tiles[10],pl_pointer_pos[i],WHITE);
+                pl_side[i]=4;
             }
-            if(pl_dir[i]=='w' || pl_dir[i]=='q' || pl_dir[i]=='e')
-            {
-                if(pl_act[i]=='w')
-                {
-                    DrawTextureRec(OldeAssets.AvatarsSprite,tiles[0+current_draw_offset],pl_pointer_pos[i],WHITE);
-                }
-                else DrawTextureRec(OldeAssets.AvatarsSprite,tiles[0],pl_pointer_pos[i],WHITE);
-            }
+            int avatar_offset=0;
+            if(pl_avatar[i]==0) avatar_offset=0;
+            else if(pl_avatar[i]==1) avatar_offset=40;
+            else if(pl_avatar[i]==2) avatar_offset=80;
+            else if(pl_avatar[i]==3) avatar_offset=120;
+            else avatar_offset=0;
 
-            if(pl_dir[i]=='x' || pl_dir[i]=='z' || pl_dir[i]=='c')
-            {
-                if(pl_act[i]=='w')
-                {
-                    DrawTextureRec(OldeAssets.AvatarsSprite,tiles[10+current_draw_offset],pl_pointer_pos[i],WHITE);
-                }
-                else DrawTextureRec(OldeAssets.AvatarsSprite,tiles[10],pl_pointer_pos[i],WHITE);
-            }
+            int offset=0;
 
-            if(pl_dir[i]=='a')
+            if(pl_act[i]=='w')
             {
-                if(pl_act[i]=='w')
+                if(pl_act[i]==player_num)
                 {
-                    DrawTextureRec(OldeAssets.AvatarsSprite,tiles[20+current_draw_offset],pl_pointer_pos[i],WHITE);
+                    offset=avatar_offset+pl_side[i]+10;
+                    DrawTextureRec(OldeAssets.AvatarsSprite,tiles[offset+current_draw_offset],local_player_pos,WHITE);
                 }
-                else DrawTextureRec(OldeAssets.AvatarsSprite,tiles[20],pl_pointer_pos[i],WHITE);
+                else
+                {
+                    offset=avatar_offset+pl_side[i]+10;
+                    DrawTextureRec(OldeAssets.AvatarsSprite,tiles[offset+current_draw_offset],pl_pointer_pos[i],WHITE);
+                }
             }
-
-            if(pl_dir[i]=='d')
+            else
             {
-                if(pl_act[i]=='w')
+                if(pl_act[i]==player_num)
                 {
-                    DrawTextureRec(OldeAssets.AvatarsSprite,tiles[30+current_draw_offset],pl_pointer_pos[i],WHITE);
+                    offset=avatar_offset+pl_side[i];
+                    DrawTextureRec(OldeAssets.AvatarsSprite,tiles[offset],local_player_pos,WHITE);
                 }
-                else DrawTextureRec(OldeAssets.AvatarsSprite,tiles[30],pl_pointer_pos[i],WHITE);
+                else
+                {
+                    offset=avatar_offset+pl_side[i];
+                    DrawTextureRec(OldeAssets.AvatarsSprite,tiles[offset],pl_pointer_pos[i],WHITE);
+                }
             }
         }
-
-
     }
+    // for(int i=0;i<max_clients;i++)
+    // {
+    //     if(pl_active[i]==true) // && pl_active[i]!=player_num)
+    //     {
+    //         if(pl_dir[i]=='w' || pl_dir[i]=='q' || pl_dir[i]=='e')
+    //         {
+    //             if(pl_act[i]=='w')
+    //             {
+    //                 DrawTextureRec(OldeAssets.AvatarsSprite,tiles[0+current_draw_offset],pl_pointer_pos[i],WHITE);
+    //             }
+    //             else DrawTextureRec(OldeAssets.AvatarsSprite,tiles[0],pl_pointer_pos[i],WHITE);
+    //         }
+    //         if(pl_dir[i]=='x' || pl_dir[i]=='z' || pl_dir[i]=='c')
+    //         {
+    //             if(pl_act[i]=='w')
+    //             {
+    //                 DrawTextureRec(OldeAssets.AvatarsSprite,tiles[10+current_draw_offset],pl_pointer_pos[i],WHITE);
+    //             }
+    //             else DrawTextureRec(OldeAssets.AvatarsSprite,tiles[10],pl_pointer_pos[i],WHITE);
+    //         }
+    //         if(pl_dir[i]=='w' || pl_dir[i]=='q' || pl_dir[i]=='e')
+    //         {
+    //             if(pl_act[i]=='w')
+    //             {
+    //                 DrawTextureRec(OldeAssets.AvatarsSprite,tiles[0+current_draw_offset],pl_pointer_pos[i],WHITE);
+    //             }
+    //             else DrawTextureRec(OldeAssets.AvatarsSprite,tiles[0],pl_pointer_pos[i],WHITE);
+    //         }
+
+    //         if(pl_dir[i]=='x' || pl_dir[i]=='z' || pl_dir[i]=='c')
+    //         {
+    //             if(pl_act[i]=='w')
+    //             {
+    //                 DrawTextureRec(OldeAssets.AvatarsSprite,tiles[10+current_draw_offset],pl_pointer_pos[i],WHITE);
+    //             }
+    //             else DrawTextureRec(OldeAssets.AvatarsSprite,tiles[10],pl_pointer_pos[i],WHITE);
+    //         }
+
+    //         if(pl_dir[i]=='a')
+    //         {
+    //             if(pl_act[i]=='w')
+    //             {
+    //                 DrawTextureRec(OldeAssets.AvatarsSprite,tiles[20+current_draw_offset],pl_pointer_pos[i],WHITE);
+    //             }
+    //             else DrawTextureRec(OldeAssets.AvatarsSprite,tiles[20],pl_pointer_pos[i],WHITE);
+    //         }
+
+    //         if(pl_dir[i]=='d')
+    //         {
+    //             if(pl_act[i]=='w')
+    //             {
+    //                 DrawTextureRec(OldeAssets.AvatarsSprite,tiles[30+current_draw_offset],pl_pointer_pos[i],WHITE);
+    //             }
+    //             else DrawTextureRec(OldeAssets.AvatarsSprite,tiles[30],pl_pointer_pos[i],WHITE);
+    //         }
+    // }
+
+
+    // }
 }
 
-void Game_Player::SetPlayerNumber(int num)
+void Game_Player::SetLocalPlayerNumber(int num,uint8_t av_num)
 {
-    player_num=num;
-    pl_dir[player_num]='a';
-    pl_act[player_num]='i';
+    pl_dir[num]='a';
+    pl_act[num]='i';
+    pl_avatar[num]=av_num;
 }

@@ -1,5 +1,7 @@
 #pragma once
 #include"raylib.h"
+#include<iostream>
+#include<fstream>
 #include<string>
 #include<cstdint>
 
@@ -14,6 +16,7 @@ class Game_Data
     std::string ip_address;
     bool editor_new_map;
     bool connection_to_host;
+    bool cfg_file_loaded;
 
     int8_t local_player_num;
     int resolution_selection;
@@ -34,4 +37,9 @@ class Game_Data
     void SetRender1080p();
     bool IsAddrIPNotEmpty();
     std::string GetAddrIP();
+
+    bool IsConfigValid();
+
+    private:
+    size_t GetLengthOfEntry(std::string &str,size_t start);
 };

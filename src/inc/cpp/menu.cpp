@@ -22,7 +22,7 @@ Game_Menu::Game_Menu(int what_menu)
     ip_name_char_num=0;
     res_x_char_num=0;
     res_y_char_num=0;
-    memset(ip_addr,0,sizeof(ip_addr));
+    // memset(ip_addr,0,sizeof(ip_addr));
 
     switch(what_menu)
     {
@@ -150,7 +150,7 @@ void Game_Menu::DrawMenu(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &
 
         how_many_entries=menu_names.size()-1;
         menu_pos_v.y=menu_pos_y_set;
-        for(int y=0;y<=menu_names.size()-1;y++)
+        for(int y=0;y<=(int)menu_names.size()-1;y++)
         {
             // DrawTextPro(Font font, const char *text, Vector2 position, Vector2 origin, float rotation, float fontSize, float spacing, Color tint);
             if(y==cursor_pos)
@@ -188,14 +188,14 @@ void Game_Menu::DrawMenu(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &
             menu_pos_v.y+=y_spanning;
         }
 
-        if(cursor_pos>menu_names.size()-1) cursor_pos=menu_names.size()-1;
+        if(cursor_pos>(int)menu_names.size()-1) cursor_pos=menu_names.size()-1;
     }
 
     if(public_display_load_menu)
     {
         how_many_entries=map_list.size()-1;
         menu_pos_v.y=menu_pos_y_set;
-        for(int y=0;y<=map_list.size()-1;y++)
+        for(int y=0;y<=(int)map_list.size()-1;y++)
         {
             // DrawTextPro(Font font, const char *text, Vector2 position, Vector2 origin, float rotation, float fontSize, float spacing, Color tint);
             if(y==cursor_pos)
@@ -209,7 +209,7 @@ void Game_Menu::DrawMenu(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &
             }
             menu_pos_v.y+=y_spanning;
         }
-        if(cursor_pos>map_list.size()-1) cursor_pos=map_list.size()-1;
+        if(cursor_pos>(int)map_list.size()-1) cursor_pos=map_list.size()-1;
     }
 
     if(public_display_connect_menu)
@@ -222,7 +222,7 @@ void Game_Menu::DrawMenu(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &
 
         how_many_entries=connection_list.size()-1;
         menu_pos_v.y=menu_pos_y_set;
-        for(int y=0;y<=connection_list.size()-1;y++)
+        for(int y=0;y<=(int)connection_list.size()-1;y++)
         {
             if(y==cursor_pos)
             {
@@ -237,16 +237,16 @@ void Game_Menu::DrawMenu(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &
             {
                 TypeIPAddr(OldeSettings);
             }
-            if(d_time>0.0 && d_time<0.5) DrawTextEx(OldeAssets.GameFont,TextFormat("%s_",ip_addr),ip_pos_v,font_size,1.0f,WHITE);
-            if(d_time>0.5 && d_time<1.0) DrawTextEx(OldeAssets.GameFont,TextFormat("%s",ip_addr),ip_pos_v,font_size,1.0f,WHITE);
-            if(d_time>1.0 && d_time<1.5) DrawTextEx(OldeAssets.GameFont,TextFormat("%s_",ip_addr),ip_pos_v,font_size,1.0f,WHITE);
-            if(d_time>1.5 && d_time<2.0) DrawTextEx(OldeAssets.GameFont,TextFormat("%s",ip_addr),ip_pos_v,font_size,1.0f,WHITE);
-            if(d_time>2.0 && d_time<2.5) DrawTextEx(OldeAssets.GameFont,TextFormat("%s_",ip_addr),ip_pos_v,font_size,1.0f,WHITE);
-            if(d_time>2.5)               DrawTextEx(OldeAssets.GameFont,TextFormat("%s",ip_addr),ip_pos_v,font_size,1.0f,WHITE);
+            if(d_time>0.0 && d_time<0.5) DrawTextEx(OldeAssets.GameFont,TextFormat("%s_",ip_addr_new.c_str()),ip_pos_v,font_size,1.0f,WHITE);
+            if(d_time>0.5 && d_time<1.0) DrawTextEx(OldeAssets.GameFont,TextFormat("%s",ip_addr_new.c_str()),ip_pos_v,font_size,1.0f,WHITE);
+            if(d_time>1.0 && d_time<1.5) DrawTextEx(OldeAssets.GameFont,TextFormat("%s_",ip_addr_new.c_str()),ip_pos_v,font_size,1.0f,WHITE);
+            if(d_time>1.5 && d_time<2.0) DrawTextEx(OldeAssets.GameFont,TextFormat("%s",ip_addr_new.c_str()),ip_pos_v,font_size,1.0f,WHITE);
+            if(d_time>2.0 && d_time<2.5) DrawTextEx(OldeAssets.GameFont,TextFormat("%s_",ip_addr_new.c_str()),ip_pos_v,font_size,1.0f,WHITE);
+            if(d_time>2.5)               DrawTextEx(OldeAssets.GameFont,TextFormat("%s",ip_addr_new.c_str()),ip_pos_v,font_size,1.0f,WHITE);
             // DrawTextEx(OldeAssets.GameFont,TextFormat("%s",ip_addr),ip_pos_v,font_size,1.0f,WHITE);
             menu_pos_v.y+=y_spanning;
         }
-        if(cursor_pos>connection_list.size()-1) cursor_pos=connection_list.size()-1;
+        if(cursor_pos>(int)connection_list.size()-1) cursor_pos=connection_list.size()-1;
     }
     
     if(public_display_options_menu)
@@ -264,7 +264,7 @@ void Game_Menu::DrawMenu(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &
             menu_pos_y_set
         };
         DrawTextEx(OldeAssets.GameFont,TextFormat("Current Resolution: %dx%d",GetScreenWidth(),GetScreenHeight()),static_res,font_size,1.0f,GREEN);
-        for(int y=0;y<=options_list.size()-1;y++)
+        for(int y=0;y<=(int)options_list.size()-1;y++)
         {
             // DrawTextPro(Font font, const char *text, Vector2 position, Vector2 origin, float rotation, float fontSize, float spacing, Color tint);
             if(y==cursor_pos)
@@ -289,7 +289,7 @@ void Game_Menu::DrawMenu(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &
             }
             menu_pos_v.y+=y_spanning;
         }
-        if(cursor_pos>options_list.size()-1) cursor_pos=options_list.size()-1;
+        if(cursor_pos>(int)options_list.size()-1) cursor_pos=options_list.size()-1;
     }
 
     if(public_display_editor_resize)
@@ -307,7 +307,7 @@ void Game_Menu::DrawMenu(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &
 
         how_many_entries=resize_list.size()-1;
         menu_pos_v.y=menu_pos_y_set;
-        for(int y=0;y<=resize_list.size()-1;y++)
+        for(int y=0;y<=(int)resize_list.size()-1;y++)
         {
             if(y==cursor_pos)
             {
@@ -341,7 +341,7 @@ void Game_Menu::DrawMenu(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &
 
             menu_pos_v.y+=y_spanning;
         }
-        if(cursor_pos>resize_list.size()-1) cursor_pos=connection_list.size()-1;
+        if(cursor_pos>(int)resize_list.size()-1) cursor_pos=connection_list.size()-1;
     }
 }
 
@@ -418,7 +418,7 @@ void Game_Menu::ShowLoading(Game_Assets &OldeAssets,Game_Data &OldeSettings,std:
             if(d_time>0.0 && d_time<0.3) DrawTextEx(OldeAssets.GameFont,TextFormat("%s ...",wait_for.c_str()),(Vector2){100,100},20,1.0f,RED);
             if(d_time>0.3 && d_time<0.6) DrawTextEx(OldeAssets.GameFont,TextFormat("%s ..",wait_for.c_str()),(Vector2){100,100},20,1.0f,RED);
             if(d_time>0.6 && d_time<1.0) DrawTextEx(OldeAssets.GameFont,TextFormat("%s .",wait_for.c_str()),(Vector2){100,100},20,1.0f,RED);
-            DrawTextEx(OldeAssets.GameFont,TextFormat("map - %s",OldeSettings.current_map.c_str()),(Vector2){100,140},20,1.0f,DARKBROWN);
+            //DrawTextEx(OldeAssets.GameFont,TextFormat("map - %s",OldeSettings.current_map.c_str()),(Vector2){100,140},20,1.0f,DARKBROWN);
             if(OldeSettings.connection_to_host) DrawTextEx(OldeAssets.GameFont,TextFormat("IP - %s",OldeSettings.ip_address.c_str()),(Vector2){100,160},20,1.0f,DARKBROWN);
 
         EndDrawing();
@@ -442,13 +442,21 @@ void Game_Menu::ShowHostInfo(Game_Assets &OldeAssets,Game_Data &OldeSettings)
 // ADD FOR ENET
 }
 
+void Game_Menu::PassIpAddress(std::string ip_a)
+{
+    ip_addr_new=ip_a;
+    ip_name_char_num=ip_addr_new.length();
+
+    // calculate based on what is passed from config
+}
+
 void Game_Menu::TypeNewMapName(Game_Assets &OldeAssets,Game_Data &OldeSettings)
 {
     std::string s_buf;
     s_buf.clear();
     const int max_type_chars=24;
     bool typing=true;
-    bool enter_pressed=false;
+    bool enter_pressed=false; if(enter_pressed) enter_pressed=false; // ONLY FOR GCC COMPLIER WARNING BULLSHIT!
     char map_name[max_type_chars]{0};
     int map_name_char_num=0;
     char buf;
@@ -475,7 +483,7 @@ void Game_Menu::TypeNewMapName(Game_Assets &OldeAssets,Game_Data &OldeSettings)
 
         buf=GetCharPressed();
 
-        if(buf>41 && buf<172)
+        if(buf>41) // && buf<=172)
         {
             if(map_name_char_num<max_type_chars)
             {
@@ -517,7 +525,7 @@ void Game_Menu::LoadMapList()
     std::vector<std::string> load_list;
     maps_dir=LoadDirectoryFilesEx("maps",".map",false);
     map_list.push_back("New Map");
-    for(int i=0;i<maps_dir.count;i++)
+    for(unsigned int i=0;i<maps_dir.count;i++)
     {
         load_list.push_back(maps_dir.paths[i]);
         load_list[i].erase(0,5);
@@ -531,20 +539,20 @@ void Game_Menu::TypeIPAddr(Game_Data &OldeSettings)
     char buf=GetCharPressed();
     if(buf>=46 && buf<=57)
     {
-        ip_addr[ip_name_char_num]=buf;
+        ip_addr_new[ip_name_char_num]=buf;
         ip_name_char_num++;
         if(ip_name_char_num>16) ip_name_char_num=16;
     }
     if(IsKeyPressed(KEY_BACKSPACE))
     {
-        if(ip_name_char_num>0) ip_addr[ip_name_char_num-1]=0;
+        if(ip_name_char_num>0) ip_addr_new[ip_name_char_num-1]=0;
         ip_name_char_num--;
         if(ip_name_char_num<0) ip_name_char_num=0;
     }
 
     if(IsKeyPressed(KEY_ENTER))
     {
-        OldeSettings.ip_address=ip_addr;
+        OldeSettings.ip_address=ip_addr_new;
     }
 }
 

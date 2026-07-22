@@ -75,6 +75,7 @@ void NetworkHost::NetworkHostService(MapTools &OldeMap)
                 //else
                 {
                     printf("New connection using slot: %d/%d\n",playerId,(max_clients)-1);
+                    printf("Wants avatar %d\n",event.data);
                     who_is_talking_now=playerId;
                     Clients[playerId].Active=true;
                     Clients[playerId].ValidPosition=false;
@@ -120,7 +121,6 @@ void NetworkHost::NetworkHostService(MapTools &OldeMap)
                     memcpy(&buffer[6],&mapx,sizeof(uint16_t));
                     memcpy(&buffer[8],&mapy,sizeof(uint16_t));
                     buffer[10]=Clients[playerId].avatar;
-                    printf("send him a %d\n",Clients[playerId].avatar);
 
                     // CLEAN UP THIS MESS!!!!
                     // MOVE IT TO CLASS TEMPLATE FOR EVERY TYPE
@@ -151,7 +151,7 @@ void NetworkHost::NetworkHostService(MapTools &OldeMap)
             case ENET_EVENT_TYPE_RECEIVE:
             {
                 uint8_t playerId=GetPlayerId(event.peer);
-                if(playerId==-1)
+                if(playerId>max_clients)
                 {
                     enet_peer_disconnect(event.peer,0);
                     break;
@@ -171,11 +171,12 @@ void NetworkHost::NetworkHostService(MapTools &OldeMap)
                     Clients[playerId].hands=event.packet->data[3];
                     Clients[playerId].backpack_slot0=event.packet->data[4];
                     Clients[playerId].backpack_slot1=event.packet->data[5];
-                    Clients[playerId].avatar=event.packet->data[6];
-                    memcpy(&Clients[playerId].x,&event.packet->data[7],sizeof(float));
-                    memcpy(&Clients[playerId].y,&event.packet->data[11],sizeof(float));
-                    memcpy(&Clients[playerId].posx,&event.packet->data[15],sizeof(uint16_t));
-                    memcpy(&Clients[playerId].posy,&event.packet->data[17],sizeof(uint16_t));
+                    Clients[playerId].backpack_slot1=event.packet->data[6];
+                    Clients[playerId].avatar=event.packet->data[7];
+                    memcpy(&Clients[playerId].x,&event.packet->data[8],sizeof(float));
+                    memcpy(&Clients[playerId].y,&event.packet->data[12],sizeof(float));
+                    memcpy(&Clients[playerId].posx,&event.packet->data[16],sizeof(uint16_t));
+                    memcpy(&Clients[playerId].posy,&event.packet->data[18],sizeof(uint16_t));
 
                     Clients[playerId].act_posx=Clients[playerId].posx;
                     Clients[playerId].act_posy=Clients[playerId].posy;
@@ -269,7 +270,7 @@ void NetworkHost::NetworkHostService(MapTools &OldeMap)
             case ENET_EVENT_TYPE_DISCONNECT:
             {
                 uint8_t playerId=GetPlayerId(event.peer);
-                if(playerId==-1) break;
+                if(playerId>max_clients) break;
 
                 printf("Client %d/%d disconnecting\n",playerId,(max_clients)-1);
 
@@ -327,7 +328,7 @@ void NetworkHost::SendToOtherClients(ENetPacket *packet,uint8_t exceptPlayerId,e
         if(!Clients[i].Active || i==exceptPlayerId) continue;
         printf("sent to %d client\n",i);
         printf("who created this packet: %d\n",who_is_talking_now);
-        size_t bufsiz=packet->dataLength;
+        // size_t bufsiz=packet->dataLength;
         enet_peer_send(Clients[i].Peer,what_channel,packet);
     }
 }

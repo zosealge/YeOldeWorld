@@ -11,7 +11,7 @@ class Game_Player
     const int pngarraywidth=10;
     const int pngarrayheight=60;
     int player_num;
-    char pl_avatar[max_clients]{};
+    uint8_t pl_avatar[max_clients]{};
     char pl_dir[max_clients]{};
     char pl_act[max_clients]{};
     uint8_t pl_side[max_clients]{};
@@ -31,10 +31,10 @@ class Game_Player
     void MoveLocalPlayer(Vector2 &pos);
     // void MovePlayers();
     void DrawLocalPlayer(Game_Assets &OldeAssets,float &d_time,bool debug_mode);
-    void DrawNetworkPlayer(Game_Assets &OldeAssets,float &d_time); // no debug for network players?
+    void DrawPlayers(Game_Assets &OldeAssets,float &d_time); // no debug for network players?
 
     void Collide(float speed);
-    void SetPlayerNumber(int num);
+    void SetLocalPlayerNumber(int num,uint8_t av_num);
 
     private:
     int pl_avatar_offset[max_clients]{};

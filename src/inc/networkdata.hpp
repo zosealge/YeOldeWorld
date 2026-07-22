@@ -13,4 +13,7 @@ class Network_Data
 
     Network_Data();
     bool IsConfigValid();
+
+    private:
+    size_t GetLengthOfEntry(std::string &str,size_t start);
 };

@@ -1,13 +1,4 @@
-//   ___    ___ _______   ________  ___       ________  _______   ___       __   ________  ________  ___       ________  _______      
-//  |\  \  /  /|\  ___ \ |\   __  \|\  \     |\   ___ \|\  ___ \ |\  \     |\  \|\   __  \|\   __  \|\  \     |\   ___ \|\  ___ \     
-//  \ \  \/  / | \   __/|\ \  \|\  \ \  \    \ \  \_|\ \ \   __/|\ \  \    \ \  \ \  \|\  \ \  \|\  \ \  \    \ \  \_|\ \ \   __/|    
-//   \ \    / / \ \  \_|/_\ \  \\\  \ \  \    \ \  \ \\ \ \  \_|/_\ \  \  __\ \  \ \  \\\  \ \   _  _\ \  \    \ \  \ \\ \ \  \_|/__  
-//    \/  /  /   \ \  \_|\ \ \  \\\  \ \  \____\ \  \_\\ \ \  \_|\ \ \  \|\__\_\  \ \  \\\  \ \  \\  \\ \  \____\ \  \_\\ \ \  \_|\ \ 
-//  __/  / /      \ \_______\ \_______\ \_______\ \_______\ \_______\ \____________\ \_______\ \__\\ _\\ \_______\ \_______\ \_______\
-// |\___/ /        \|_______|\|_______|\|_______|\|_______|\|_______|\|____________|\|_______|\|__|\|__|\|_______|\|_______|\|_______|
-// \|___|/                                                                                                                            
-                                                                                                                                   
-                                                                                                                                   
+                                                                                                                 
 // YeOldeWorld Editor
 
 
@@ -40,12 +31,12 @@ struct Vector2_int
 
 int Set_Editor(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &d_time);
 
-//    _____                       
-//   /     \   ____   ____  __ __ 
-//  /  \ /  \_/ __ \ /    \|  |  \
-// /    Y    \  ___/|   |  \  |  /
-// \____|__  /\___  >___|  /____/ 
-//         \/     \/     \/       
+//  M   M AA  III N   N     M   M EEEE N   N U   U
+//  MM MMA  A  I  NN  N     MM MM E    NN  N U   U
+//  M M MAAAA  I  N N N     M M M EEE  N N N U   U
+//  M   MA  A  I  N  NN     M   M E    N  NN U   U
+//  M   MA  A III N   N     M   M EEEE N   N  UUU 
+
 int main()
 {
     const std::string OldeTitle="Olde";
@@ -121,6 +112,7 @@ int main()
                     break;
                 }
                 if(OldeMenu.public_display_options_menu) break;
+                break;
                 
             case 2:
                 if(OldeMenu.public_display_options_menu)
@@ -128,6 +120,7 @@ int main()
                     if(!IsWindowFullscreen()) OldeSettings.ChangeResolution();
                     break;
                 }
+                break;
 
             case 3:
                 if(OldeMenu.public_display_options_menu)
@@ -135,6 +128,7 @@ int main()
                     OldeSettings.SetScreenMode();
                     break;
                 }
+                break;
 
             default:
                 if(OldeMenu.public_display_load_menu)
@@ -162,22 +156,11 @@ int main()
     return 0;
 }
 
-//                                      ,----,                    
-//                                    ,/   .`|                    
-//     ,---,.              ,---,    ,`   .'  :        ,-.----.    
-//   ,'  .' |      ,---,,`--.' |  ;    ;     /        \    /  \   
-// ,---.'   |    ,---.'||   :  :.'___,/    ,'  ,---.  ;   :    \  
-// |   |   .'    |   | ::   |  '|    :     |  '   ,'\ |   | .\ :  
-// :   :  |-,    |   | ||   :  |;    |.';  ; /   /   |.   : |: |  
-// :   |  ;/|  ,--.__| |'   '  ;`----'  |  |.   ; ,. :|   |  \ :  
-// |   :   .' /   ,'   ||   |  |    '   :  ;'   | |: :|   : .  /  
-// |   |  |-,.   '  /  |'   :  ;    |   |  ''   | .; :;   | |  \  
-// '   :  ;/|'   ; |:  ||   |  '    '   :  ||   :    ||   | ;\  \ 
-// |   |    \|   | '/  ''   :  |    ;   |.'  \   \  / :   ' | \.' 
-// |   :   .'|   :    :|;   |.'     '---'     `----'  :   : :-'   
-// |   | ,'   \   \  /  '---'                         |   |.'     
-// `----'      `----'                                 `---'       
-                                                               
+//  EEEE DDD  III TTTTTT  OOO  RRRR 
+//  E    D  D  I    TT   O   O R   R
+//  EEE  D  D  I    TT   O   O RRRR 
+//  E    D  D  I    TT   O   O R R  
+//  EEEE DDD  III   TT    OOO  R  RR                                                      
 
 int Set_Editor(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &d_time)
 {
@@ -196,7 +179,7 @@ int Set_Editor(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &d_time)
 
     float speed_pointer_move=1.0f;
     Vector2 edit_pointer_pos{};
-    Vector2 camera_pointer_pos{};
+    // Vector2 camera_pointer_pos{};
     Vector2 mouse_pos{}; // ?
     Vector4 render{};
     int16_t palette_num=0;
@@ -558,8 +541,8 @@ int Set_Editor(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &d_time)
             edit_pointer_pos.x=render.x;
             edit_pointer_pos.y=render.y;
 
-            camera_pointer_pos.x=render.x;
-            camera_pointer_pos.y=render.x;
+            // camera_pointer_pos.x=render.x;
+            // camera_pointer_pos.y=render.x;
             reloadAssets=false;
         }
 

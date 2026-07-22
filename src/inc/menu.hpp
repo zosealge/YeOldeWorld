@@ -43,6 +43,7 @@ class Game_Menu
 
     // client menus
     void ShowHostInfo(Game_Assets &OldeAssets,Game_Data &OldeSettings);
+    void PassIpAddress(std::string ip_a);
 
     // editor menus
     void TypeNewMapName(Game_Assets &OldeAssets,Game_Data &OldeSettings);
@@ -91,7 +92,8 @@ class Game_Menu
     // void SetHeight(int set);
 
     void TypeIPAddr(Game_Data &OldeSettings);
-    char ip_addr[16];
+    // char ip_addr[16];
+    std::string ip_addr_new;
     int ip_name_char_num;
 
     void ChangeResX();

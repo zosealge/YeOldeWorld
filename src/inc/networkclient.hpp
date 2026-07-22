@@ -3,6 +3,7 @@
 #include"enet.h"
 #include"network.hpp"
 #include"maptools.hpp"
+#include"player.hpp"
 #include<string>
 #include<iostream>
 
@@ -26,6 +27,7 @@ class NetworkClient
     double InputUpdateInterval;
 
     int LocalPlayerId=-1;
+    uint8_t LocalPlayerAvatar=0;
 
     bool NetworkInitialize();
     void NetworkDeinitialize();
@@ -33,14 +35,18 @@ class NetworkClient
     // 
     // 
 
-    bool NetworkConnectToHost(std::string what_address);
-    void Update(double now,float deltaT,MapTools &OldeMap);
+    bool NetworkConnectToHost(std::string what_address,uint8_t selected_avatar);
+    void Update(double now,float deltaT,MapTools &OldeMap,Game_Player &OldePlayer);
     void Disconnect();
     int GetLocalPlayerId();
     bool Connected();
-    void PrepareLocalClient(const Vector2 &pos,const uint8_t dir,const uint8_t act,uint16_t posx,uint16_t posy);
+    // function will be changed for structure that single integers - this is for test only - how it will grow in the future
+    // after it will reach the stable point - then it will be reworked to struct
+    void PrepareLocalClient(const Vector2 &pos,const uint8_t dir,const uint8_t act,uint16_t posx,uint16_t posy,uint8_t av_num);
 
     private:
+
+    bool receive_packet;
 
     void UpdateRemoteClient(ENetPacket *packet);
     int ReadCommand(ENetPacket *packet);

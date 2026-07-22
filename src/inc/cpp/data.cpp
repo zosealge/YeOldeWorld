@@ -2,6 +2,55 @@
 
 Game_Data::Game_Data()
 {
+    cfg_file_loaded=false;
+    std::ifstream cfg_file("client.cfg");
+    std::string line;
+
+    if(cfg_file.is_open())
+    {
+        cfg_file_loaded=true;
+        printf("OLDE: client.cfg - found!\n");
+        while(std::getline(cfg_file,line))
+        {
+            if(line.compare(0,2,"ip")==0)
+            {
+                size_t start=line.find('=')+1;
+                size_t length=GetLengthOfEntry(line,start);
+                //  (size_type pos = 0, size_type len = npos)
+                ip_address=line.substr(start,length);
+            }
+
+            if(line.compare(0,10,"fullscreen")==0)
+            {
+                size_t start=line.find('=')+1;
+                size_t length=GetLengthOfEntry(line,start);
+                std::string grab=line.substr(start,length);
+                // printf("fullscreen option is: %s\n",grab.c_str());
+            }
+
+            if(line.compare(0,3,"res")==0)
+            {
+                size_t start=line.find('=')+1;
+                size_t length=GetLengthOfEntry(line,start);
+                std::string grab=line.substr(start,length);
+                // printf("res option is: %s\n",grab.c_str());
+            }
+
+            if(line.compare(0,3,"fps")==0)
+            {
+                size_t start=line.find('=')+1;
+                size_t length=GetLengthOfEntry(line,start);
+                std::string grab=line.substr(start,length);
+                // printf("fps option is: %s\n",grab.c_str());
+            }
+        }
+    }
+    else
+    {
+        cfg_file_loaded=false;
+        printf("OLDE: client.cfg - not found! - 0001\n");
+        // cfg_file_loaded==false will cause game exit
+    }
     editor_max_map_x=0;
     editor_max_map_y=0;
     resolution_selection=0;
@@ -79,4 +128,25 @@ bool Game_Data::IsAddrIPNotEmpty()
 std::string Game_Data::GetAddrIP()
 {
     return ip_address;
+}
+
+bool Game_Data::IsConfigValid()
+{
+    return cfg_file_loaded;
+}
+
+size_t Game_Data::GetLengthOfEntry(std::string &str,size_t start)
+{
+    // size_t start=line.find('=')+1;
+    size_t length=0;
+    for(size_t i=0;;i++)
+    {
+        if(str[i]==';')
+        {
+            length=i;
+            break;
+        }
+    }
+    length-=start;
+    return length;
 }

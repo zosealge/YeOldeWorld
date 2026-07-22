@@ -112,7 +112,11 @@ MapTools::~MapTools()
     delete []map_arr;
 }
 
-// DRAW
+//  DDD  RRRR  AA  W     W     M   M AA  PPPP 
+//  D  D R   RA  A W     W     MM MMA  A P   P
+//  D  D RRRR AAAA W  W  W     M M MAAAA PPPP 
+//  D  D R R  A  A  W W W      M   MA  A P    
+//  DDD  R  RRA  A   W W       M   MA  A P    
 
 void MapTools::DrawMap(Game_Assets &OldeAssets,float &d_time,Vector4 &render,bool debug_mode)
 {   
@@ -309,12 +313,11 @@ void MapTools::ReloadMap()
     }
 }
 
-//   _________                       _____                    ___ ___                      ._.
-//  /   _____/____ ___  __ ____     /     \ _____  ______    /   |   \   ___________   ____| |
-//  \_____  \\__  \\  \/ // __ \   /  \ /  \\__  \ \____ \  /    ~    \_/ __ \_  __ \_/ __ \ |
-//  /        \/ __ \\   /\  ___/  /    Y    \/ __ \|  |_> > \    Y    /\  ___/|  | \/\  ___/\|
-// /_______  (____  /\_/  \___  > \____|__  (____  /   __/   \___|_  /  \___  >__|    \___  >_
-//         \/     \/          \/          \/     \/|__|            \/       \/            \/\/
+//   SSS  AA  V     V EEEE     M   M AA  PPPP      H  H EEEE RRRR  EEEE
+//  S    A  A V     V E        MM MMA  A P   P     H  H E    R   R E   
+//   SSS AAAA  V   V  EEE      M M MAAAA PPPP      HHHH EEE  RRRR  EEE 
+//      SA  A   V V   E        M   MA  A P         H  H E    R R   E   
+//  SSSS A  A    V    EEEE     M   MA  A P         H  H EEEE R  RR EEEE
 
 int MapTools::SaveMap(Game_Data &OldeSettings)
 {
@@ -383,13 +386,11 @@ int MapTools::SaveMap(Game_Data &OldeSettings)
     return 0;
 }
 
-
-// .____                     .___    _____                    ___ ___                      ._.
-// |    |    _________     __| _/   /     \ _____  ______    /   |   \   ___________   ____| |
-// |    |   /  _ \__  \   / __ |   /  \ /  \\__  \ \____ \  /    ~    \_/ __ \_  __ \_/ __ \ |
-// |    |__(  <_> ) __ \_/ /_/ |  /    Y    \/ __ \|  |_> > \    Y    /\  ___/|  | \/\  ___/\|
-// |_______ \____(____  /\____ |  \____|__  (____  /   __/   \___|_  /  \___  >__|    \___  >_
-//         \/         \/      \/          \/     \/|__|            \/       \/            \/\/
+//  L     OOO  AA  DDD      M   M AA  PPPP      H  H EEEE RRRR  EEEE
+//  L    O   OA  A D  D     MM MMA  A P   P     H  H E    R   R E   
+//  L    O   OAAAA D  D     M M MAAAA PPPP      HHHH EEE  RRRR  EEE 
+//  L    O   OA  A D  D     M   MA  A P         H  H E    R R   E   
+//  LLLL  OOO A  A DDD      M   MA  A P         H  H EEEE R  RR EEEE
 
 int MapTools::LoadMap(std::string what_map)
 {
@@ -643,8 +644,8 @@ void MapTools::PlaceTileByMemPos(uint16_t tile,uint16_t tile_mem)
 
 void MapTools::MemcpyTile(uint8_t *buffer,uint16_t num,uint16_t x,uint16_t y,const int frame_size)
 {
-    size_t offset=frame_size*2;
-    int mem_map=y*max_y+x;
+    // size_t offset=frame_size*2;
+    // int mem_map=y*max_y+x;
 
     // provide packet pointer pls
 }

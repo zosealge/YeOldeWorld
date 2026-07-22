@@ -7,6 +7,7 @@
 #include"inc/maptools.hpp"
 #include"inc/network.hpp"
 #include"inc/networkhost.hpp"
+#include"inc/networkdata.hpp"
 
 bool host_shutdown=false;
 
@@ -24,14 +25,18 @@ int main()
                                      // exit host peacefuly using Ctrl+C
                                      // and then host will disconnect all the clients, shutdown in proper way
 
-    std::string map_name="mordor.map";
-    MapTools OldeMap(map_name,false); // bool for editor new map
+    Network_Data OldeHostData;
+    if(!OldeHostData.cfg_file_loaded)
+    {
+        return -1;
+    }
+    // std::string map_name="mordor.map";
+    MapTools OldeMap(OldeHostData.map,false); // bool for editor new map
     if(OldeMap.alloc_error)
     {
         printf("MapTools initialization error, shutdown \n");
         return -1;
     }
-    
     NetworkHost OldeHost;
     bool host_loop=OldeHost.NetworkInitialize();
     if(!host_loop)

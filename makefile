@@ -13,6 +13,7 @@ all: \
 	maptools.o \
 	menu.o \
 	networkclient.o \
+	networkdata.o \
 	networkhost.o \
 	player.o
 
@@ -40,6 +41,9 @@ menu.o: src/inc/cpp/menu.cpp
 networkclient.o: src/inc/cpp/networkclient.cpp
 	$(CC) -c src/inc/cpp/networkclient.cpp -o networkclient.o $(FLG)
 
+networkdata.o: src/inc/cpp/networkdata.cpp
+	$(CC) -c src/inc/cpp/networkdata.cpp -o networkdata.o $(FLG)
+
 networkhost.o: src/inc/cpp/networkhost.cpp
 	$(CC) -c src/inc/cpp/networkhost.cpp -o networkhost.o $(FLG)
 
@@ -60,7 +64,7 @@ install_editor:
 
 install_server:
 	clear
-	$(CC) -o server src/host.cpp $(INC) $(RAY) $(NET) $(FLG)
+	$(CC) -o server src/host.cpp $(INC) networkdata.o $(RAY) $(NET) $(FLG)
 
 uninstall:
 	clear

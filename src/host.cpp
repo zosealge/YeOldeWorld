@@ -26,7 +26,7 @@ int main()
                                      // and then host will disconnect all the clients, shutdown in proper way
 
     Network_Data OldeHostData;
-    if(!OldeHostData.cfg_file_loaded)
+    if(!OldeHostData.IsConfigValid())
     {
         return -1;
     }
@@ -35,6 +35,11 @@ int main()
     if(OldeMap.alloc_error)
     {
         printf("MapTools initialization error, shutdown \n");
+        return -1;
+    }
+    if(!OldeMap.IsMapValid())
+    {
+        printf("Selected map is not valid, please check server.cfg\n");
         return -1;
     }
     NetworkHost OldeHost;

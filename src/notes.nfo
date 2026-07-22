@@ -53,6 +53,7 @@ version history:
 0.0.8 - added networked map - server sends map to player
       - fixed map tearing glitch
       - changes to avatar sets and drawing players (local and network)
+      - [HOST] added cfg parser with (yet) simple configuration
 
 ongoing testing:
 - tilebased rendering system via MapTools class - prototype is done

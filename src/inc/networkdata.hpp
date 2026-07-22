@@ -12,4 +12,5 @@ class Network_Data
     std::string host_port;
 
     Network_Data();
+    bool IsConfigValid();
 };

@@ -15,7 +15,7 @@ Network_Data::Network_Data()
             if(line.compare(0,4,"port")==0)
             {
                 size_t start=line.find('=')+1;
-                size_t end=line.find(';')-4;
+                size_t end=line.find(';')-5;
                 host_port=line.substr(start,end);
                 printf("Port is set to %s\n",host_port.c_str());
             }
@@ -32,5 +32,11 @@ Network_Data::Network_Data()
     else
     {
         printf("server.cfg - not found! exiting...\n");
+        cfg_file_loaded=false;
     }
+}
+
+bool Network_Data::IsConfigValid()
+{
+    return cfg_file_loaded;
 }

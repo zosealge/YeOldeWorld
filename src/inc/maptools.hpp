@@ -32,6 +32,7 @@ class MapTools
     std::string loaded_filename;
 
         bool alloc_error;
+        bool valid_map;
 
     uint16_t spawn_point0_x;
     uint16_t spawn_point0_y;
@@ -80,6 +81,7 @@ class MapTools
     void GameSetMapSize(uint16_t setx,uint16_t sety);
     void GameCheckCollision(Game_Player &OldePlayer,bool debug_mode,bool pl_action);
 
+    bool IsMapValid();
 
     private:
     uint16_t max_size_x;

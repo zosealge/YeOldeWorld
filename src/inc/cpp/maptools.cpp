@@ -38,6 +38,7 @@
 
 MapTools::MapTools(std::string want_to_load_this_map,bool new_map)
 {
+    valid_map=true;
     alloc_error=false;
     map_arr=new(std::nothrow)       uint16_t[max_x*max_y];
     if(map_arr==nullptr)
@@ -410,6 +411,7 @@ int MapTools::LoadMap(std::string what_map)
     if(!load_header.is_open())
     {
         printf("MAPTOOLS: map header load error.\n");
+        valid_map=false;
         return -1;
     }
     else
@@ -724,4 +726,9 @@ void MapTools::ZeroMap()
             map_arr[y*max_y+x]=0;
         }
     }
+}
+
+bool MapTools::IsMapValid()
+{
+    return valid_map;
 }

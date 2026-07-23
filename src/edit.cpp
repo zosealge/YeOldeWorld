@@ -112,7 +112,6 @@ int main()
                     break;
                 }
                 if(OldeMenu.public_display_options_menu) break;
-                break;
                 
             case 2:
                 if(OldeMenu.public_display_options_menu)
@@ -120,7 +119,6 @@ int main()
                     if(!IsWindowFullscreen()) OldeSettings.ChangeResolution();
                     break;
                 }
-                break;
 
             case 3:
                 if(OldeMenu.public_display_options_menu)
@@ -128,7 +126,6 @@ int main()
                     OldeSettings.SetScreenMode();
                     break;
                 }
-                break;
 
             default:
                 if(OldeMenu.public_display_load_menu)

@@ -208,6 +208,179 @@ void MapTools::DrawMap(Game_Assets &OldeAssets,float &d_time,Vector4 &render,boo
     }
 }
 
+void MapTools::DrawMapLayer(Game_Assets &OldeAssets,float &d_time,Vector4 &render,bool debug_mode,int layer)
+{   
+    draw_frame.x=render.x;
+    draw_frame.y=render.y;
+    draw_frame.z=render.z;
+    draw_frame.w=render.w;
+
+    draw_tile.x=render.x/tilesize;
+    draw_tile.y=render.y/tilesize;
+    draw_tile.z=render.z/tilesize;
+    draw_tile.w=render.w/tilesize;
+
+    int t=0;
+    for(int y=(int)draw_tile.y;y<(int)draw_tile.w;y++)
+    {
+        for(int x=(int)draw_tile.x;x<(int)draw_tile.z;x++)
+        {
+            draw_pos.x=(float)x*tilesize;
+            draw_pos.y=(float)y*tilesize;
+            if(x < 0 || y < 0 || x > max_size_x-1 || y > max_size_y-1)
+            {
+                DrawTextureRec(OldeAssets.MapSprite,R_Map[0],draw_pos,WHITE);
+            }
+            else
+            {
+                t=map_arr[y*max_y+x];
+                if(layer==0)
+                {
+                    switch(t)
+                    {
+                        case 0:
+                        case 39:
+                        case 44:
+                        case 45:
+                        case 46:
+                        case 47:
+                        case 72:
+                        case 75:
+                        case 78:
+                        case 82:
+                        case 85:
+                        case 88:
+                        case 96:
+                        case 102:
+                        case 105:
+                        case 110:
+                        case 111:
+                        case 112:
+                        case 115:
+                        case 130:
+                        case 131:
+                        case 132:
+                        case 134:
+                        case 135:
+                        case 140:
+                        case 141:
+                        case 142:
+                        case 144:
+                        case 145:
+                        case 150:
+                        case 151:
+                        case 152:
+                        case 154:
+                        case 155:
+                        case 160:
+                        case 161:
+                        case 162:
+                        case 164:
+                        case 165:
+                        case 170:
+                        case 171:
+                        case 172:
+                        case 174:
+                        case 175:
+                        case 190:
+                        case 192:
+                            break;
+
+                        // case animation:
+                        //     int t_ani;
+                        //     if(d_time>0.0 && d_time<0.5) t_ani=0;
+                        //     if(d_time>0.5 && d_time<1.0) t_ani=1;
+                        //     if(d_time>1.0 && d_time<1.5) t_ani=2;
+                        //     if(d_time>1.5 && d_time<2.0) t_ani=3;
+                        //     if(d_time>2.0 && d_time<2.5) t_ani=4;
+                        //     if(d_time>2.5)               t_ani=5;
+                        //     DrawTextureRec(OldeAssets.GroundSprite,R_Walls[t+t_ani],draw_pos,WHITE);
+                        //     break;
+
+                        default:
+                            DrawTextureRec(OldeAssets.MapSprite,R_Map[t],draw_pos,WHITE);
+                            break;
+                    }
+                }
+                if(layer==1)
+                {
+                    switch(t)
+                    {
+                        // case 0:
+                        //     break;
+                        case 39:
+                        case 44:
+                        case 45:
+                        case 46:
+                        case 47:
+                        case 72:
+                        case 75:
+                        case 78:
+                        case 82:
+                        case 85:
+                        case 88:
+                        case 96:
+                        case 102:
+                        case 105:
+                        case 110:
+                        case 111:
+                        case 112:
+                        case 115:
+                        case 130:
+                        case 131:
+                        case 132:
+                        case 134:
+                        case 135:
+                        case 140:
+                        case 141:
+                        case 142:
+                        case 144:
+                        case 145:
+                        case 150:
+                        case 151:
+                        case 152:
+                        case 154:
+                        case 155:
+                        case 160:
+                        case 161:
+                        case 162:
+                        case 164:
+                        case 165:
+                        case 170:
+                        case 171:
+                        case 172:
+                        case 174:
+                        case 175:
+                        case 190:
+                        case 192:
+                            DrawTextureRec(OldeAssets.MapSprite,R_Map[t],draw_pos,WHITE);
+                            break;
+
+                        // case animation:
+                        //     int t_ani;
+                        //     if(d_time>0.0 && d_time<0.5) t_ani=0;
+                        //     if(d_time>0.5 && d_time<1.0) t_ani=1;
+                        //     if(d_time>1.0 && d_time<1.5) t_ani=2;
+                        //     if(d_time>1.5 && d_time<2.0) t_ani=3;
+                        //     if(d_time>2.0 && d_time<2.5) t_ani=4;
+                        //     if(d_time>2.5)               t_ani=5;
+                        //     DrawTextureRec(OldeAssets.GroundSprite,R_Walls[t+t_ani],draw_pos,WHITE);
+                        //     break;
+
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+
+    // DrawTextureRec(OldeAssets.GroundSprite,R_Walls[21],(Vector2){(float)draw_tile.x,(float)draw_tile.y},WHITE);
+
+    // DrawRectangle(draw_tile.x,draw_tile.y,tilesize,tilesize,YELLOW);
+}
+
 void MapTools::GameCheckCollision(Game_Player &OldePlayer,bool debug_mode,bool pl_action)
 {
     uint16_t what_on_map=0;
@@ -218,21 +391,87 @@ void MapTools::GameCheckCollision(Game_Player &OldePlayer,bool debug_mode,bool p
             what_on_map=map_arr[y*max_y+x];
             switch(what_on_map)
             {
-                case 21:
-                case 22:
-                case 23:
-                case 24:
-                case 25:
-                case 30:
-                case 32:
-                case 34:
-                case 35:
-                case 40:
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 39:
+                case 44:
+                case 45:
                 case 46:
-                case 50:
-                case 60:
+                case 47:
+                case 70:
+                case 71:
+                case 72:
+                case 73:
+                case 74:
+                case 75:
+                case 76:
+                case 77:
+                case 78:
+                case 80:
+                case 81:
+                case 82:
+                case 85:
+                case 86:
+                case 87:
+                case 88:
+                case 90:
+                case 91:
+                case 92:
+                case 93:
+                case 94:
+                case 95:
+                case 96:
                 case 100:
+                case 101:
+                case 102:
+                case 103:
+                case 104:
+                case 105:
+                case 110:
+                case 111:
+                case 112:
+                case 115:
+                case 130:
+                case 131:
+                case 132:
+                case 134:
+                case 135:
                 case 140:
+                case 141:
+                case 142:
+                case 144:
+                case 145:
+                case 150:
+                case 151:
+                case 152:
+                case 154:
+                case 155:
+                case 160:
+                case 161:
+                case 162:
+                case 164:
+                case 165:
+                case 170:
+                case 171:
+                case 172:
+                case 174:
+                case 175:
+                case 190:
+                case 192:
+
+                    P_Collision.x=-16.0f;
+                    P_Collision.y=-16.0f;
+                    break;
+
+                default:
                     P_Collision.x=x*tilesize;
                     P_Collision.y=y*tilesize;
                     if(debug_mode)
@@ -244,12 +483,7 @@ void MapTools::GameCheckCollision(Game_Player &OldePlayer,bool debug_mode,bool p
                             DrawRectangleRec(P_Collision,WHITE);
                         }
                     }
-                break;
-
-                default:
-                    P_Collision.x=-16.0f;
-                    P_Collision.y=-16.0f;
-                break;
+                    break;
             }
             if(CheckCollisionRecs(OldePlayer.local_collision,P_Collision))
             {

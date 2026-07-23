@@ -26,6 +26,12 @@
 #include"inc/player.hpp"
 #include"inc/maptools.hpp"
 
+enum draw_layers:int
+{
+    ground=0,
+    above_heads=1
+};
+
 int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &OldeNet,float &d_time);
 
 //  M   M EEEE N   N U   U
@@ -423,10 +429,11 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
             ClearBackground(BLACK);
 
             BeginMode2D(OldeCam.cam);
-                OldeMap.DrawMap(OldeAssets,d_time,render,debug_mode);
+                OldeMap.DrawMapLayer(OldeAssets,d_time,render,debug_mode,ground);
                 OldeMap.GameCheckCollision(OldePlayer,debug_mode,speed_player_move);
                 // OldePlayer.DrawLocalPlayer(OldeAssets,d_time,debug_mode);
                 OldePlayer.DrawPlayers(OldeAssets,d_time);
+                OldeMap.DrawMapLayer(OldeAssets,d_time,render,debug_mode,above_heads);
 
                 // if(!debug_hide_objects) OldeMap.DrawObjects(OldeAssets,d_time,render,debug_mode);
                 // OldeMap.DrawRoofs(OldeAssets,OldePlayer.pl_pointer_pos[local_player_id],d_time,render,debug_mode);

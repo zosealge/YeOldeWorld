@@ -50,6 +50,7 @@ class MapTools
     ~MapTools();
 
     void DrawMap(Game_Assets &OldeAssets,float &d_time,Vector4 &render,bool debug_mode);
+    void DrawMapLayer(Game_Assets &OldeAssets,float &d_time,Vector4 &render,bool debug_mode,int layer);
     // void DrawObjects(Game_Assets &OldeAssets,float &d_time,Vector4 &render,bool debug_mode);
     // void DrawRoofs(Game_Assets &OldeAssets,Vector2 &pointer_pos,float &d_time,Vector4 &render,bool debug_mode);
     // void DrawEditorRoofs(Game_Assets &OldeAssets,float &d_time,Vector4 &render,bool debug_mode);

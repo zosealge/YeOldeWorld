@@ -56,6 +56,7 @@ Game_Data::Game_Data()
     resolution_selection=0;
     fullscreen_selection=0;
     local_player_num=-1;
+    local_player_avatar=0;
     main_screen_width=1280;
     main_screen_height=720;
     set_max_fps=60;

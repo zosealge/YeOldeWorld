@@ -8,6 +8,7 @@
 class Game_Data
 {
     public:
+    const uint8_t max_avatars=6;
     int main_screen_width;
     int main_screen_height;
     int set_max_fps;
@@ -19,6 +20,7 @@ class Game_Data
     bool cfg_file_loaded;
 
     int8_t local_player_num;
+    uint8_t local_player_avatar;
     int resolution_selection;
     int fullscreen_selection;
     int xrender;

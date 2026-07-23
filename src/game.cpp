@@ -161,7 +161,7 @@ int main()
         {
             if(OldeSettings.IsAddrIPNotEmpty())
             {
-                uint8_t selected_avatar=2;
+                uint8_t selected_avatar=OldeSettings.local_player_avatar;
                 OldeSettings.connection_to_host=true;
                 OldeMenu.ShowLoading(OldeAssets,OldeSettings,"Connecting");
                 if(OldeNet.NetworkConnectToHost(OldeSettings.GetAddrIP(),selected_avatar))

@@ -61,7 +61,7 @@ Game_Menu::Game_Menu(int what_menu)
         option_attr[3]=1;
     options_list.push_back("Exit");
     connection_list.push_back("Connect to:");
-    // connection_list.push_back("Offline Mode");
+    connection_list.push_back("Avatar");
     connection_list.push_back("Exit");
     resize_list.push_back("Map X:");
     resize_list.push_back("Map Y:");
@@ -233,10 +233,20 @@ void Game_Menu::DrawMenu(Game_Assets &OldeAssets,Game_Data &OldeSettings,float &
             {
                 DrawTextEx(OldeAssets.GameFont,TextFormat("%s",connection_list[y].c_str()),menu_pos_v,font_size,1.0f,GREEN);
             }
+
             if(y==0)
             {
                 TypeIPAddr(OldeSettings);
             }
+            if(y==1)
+            {
+                ChooseAvatar(OldeSettings);
+                int offset=15+OldeSettings.local_player_avatar;
+                DrawTextureRec(OldeAssets.MenuSprite,OldeAssets.MenuRectangle[offset],(Vector2){350,180},WHITE);
+                // DrawTextEx(OldeAssets.GameFont,TextFormat("%d",OldeSettings.local_player_avatar),(Vector2){400,200},font_size,1.0f,WHITE);
+            }
+            
+
             if(d_time>0.0 && d_time<0.5) DrawTextEx(OldeAssets.GameFont,TextFormat("%s_",ip_addr_new.c_str()),ip_pos_v,font_size,1.0f,WHITE);
             if(d_time>0.5 && d_time<1.0) DrawTextEx(OldeAssets.GameFont,TextFormat("%s",ip_addr_new.c_str()),ip_pos_v,font_size,1.0f,WHITE);
             if(d_time>1.0 && d_time<1.5) DrawTextEx(OldeAssets.GameFont,TextFormat("%s_",ip_addr_new.c_str()),ip_pos_v,font_size,1.0f,WHITE);
@@ -539,20 +549,38 @@ void Game_Menu::TypeIPAddr(Game_Data &OldeSettings)
     char buf=GetCharPressed();
     if(buf>=46 && buf<=57)
     {
-        ip_addr_new[ip_name_char_num]=buf;
-        ip_name_char_num++;
-        if(ip_name_char_num>16) ip_name_char_num=16;
+        if(ip_addr_new.size()<15)
+        {
+            ip_addr_new.push_back(buf);
+            ip_name_char_num++;
+        }
     }
     if(IsKeyPressed(KEY_BACKSPACE))
     {
-        if(ip_name_char_num>0) ip_addr_new[ip_name_char_num-1]=0;
-        ip_name_char_num--;
-        if(ip_name_char_num<0) ip_name_char_num=0;
+        if(ip_addr_new.size()==0) ip_name_char_num=0;
+        else
+        {
+            ip_addr_new.pop_back();
+            ip_name_char_num--;
+        }
     }
 
     if(IsKeyPressed(KEY_ENTER))
     {
         OldeSettings.ip_address=ip_addr_new;
+    }
+}
+
+void Game_Menu::ChooseAvatar(Game_Data &OldeSettings)
+{
+    if(IsKeyPressed(KEY_LEFT) && OldeSettings.local_player_avatar>0)
+    {
+        OldeSettings.local_player_avatar--;
+    }
+
+    if(IsKeyPressed(KEY_RIGHT) && OldeSettings.local_player_avatar<OldeSettings.max_avatars)
+    {
+        OldeSettings.local_player_avatar++;
     }
 }
 

@@ -59,6 +59,7 @@ class Game_Menu
     uint16_t GetResizedMapY();
     
     private:
+    uint8_t how_many_avatars;
     int which_menu;
     int which_pos;
     // 0 - main menu
@@ -92,12 +93,14 @@ class Game_Menu
     // void SetHeight(int set);
 
     void TypeIPAddr(Game_Data &OldeSettings);
+    void ChooseAvatar(Game_Data &OldeSettings);
     // char ip_addr[16];
     std::string ip_addr_new;
     int ip_name_char_num;
 
     void ChangeResX();
     void ChangeResY();
+
     int res_x_char_num;
     int res_y_char_num;
 

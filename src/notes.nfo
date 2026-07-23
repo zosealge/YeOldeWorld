@@ -53,7 +53,7 @@ version history:
 0.0.8 - added networked map - server sends map to player every network tick (details in notes)
       - fixed map tearing glitch
       - changes to avatar sets and drawing players (local and network)
-      - added basic avatar selection (hardcoded)
+      - added avatars selection in connection menu
       - packet construction cleanup
       - added config files with parsers to host and client
       - main menu code cleanup

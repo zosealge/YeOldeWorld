@@ -139,6 +139,9 @@ void Game_Player::DrawPlayers(Game_Assets &OldeAssets,float &d_time)
             else if(pl_avatar[i]==1) avatar_offset=40;
             else if(pl_avatar[i]==2) avatar_offset=80;
             else if(pl_avatar[i]==3) avatar_offset=120;
+            else if(pl_avatar[i]==4) avatar_offset=160;
+            else if(pl_avatar[i]==5) avatar_offset=200;
+            else if(pl_avatar[i]==6) avatar_offset=240;
             else avatar_offset=0;
 
             int offset=0;

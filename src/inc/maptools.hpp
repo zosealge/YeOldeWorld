@@ -33,6 +33,7 @@ class MapTools
 
         bool alloc_error;
         bool valid_map;
+        bool map_initialized;
 
     uint16_t spawn_point0_x;
     uint16_t spawn_point0_y;
@@ -48,6 +49,8 @@ class MapTools
 
     MapTools(std::string want_to_load_this_map,bool new_map);
     ~MapTools();
+
+    void CleanUp();
 
     void DrawMap(Game_Assets &OldeAssets,float &d_time,Vector4 &render,bool debug_mode);
     void DrawMapLayer(Game_Assets &OldeAssets,float &d_time,Vector4 &render,bool debug_mode,int layer);

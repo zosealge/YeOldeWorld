@@ -249,11 +249,61 @@ void NetworkHost::NetworkHostService(MapTools &OldeMap)
                 }
                 if(event.channelID==channel_comm)
                 {
-                    printf("channel_comm in use!\n");
-                    // here will be communication signals
-                    // open door
-                    // hitting another player with something
-                    // changing something on map
+                    // printf("channel_comm in use!\n");
+                    // uint8_t comm_buffer[8]{};
+                    // comm_buffer[0]=(uint8_t)LocalPlayerId;
+                    // comm_buffer[1]=Clients[LocalPlayerId].action;
+                    // memcpy(&comm_buffer[2],&touched_x,sizeof(uint16_t));
+                    // memcpy(&comm_buffer[4],&touched_x,sizeof(uint16_t));
+                    // comm_buffer[5]=Clients[LocalPlayerId].direction;
+
+                    char comm_action=event.packet->data[1];
+                    if(comm_action=='t')
+                    {
+                        uint16_t touched_x=0;
+                        uint16_t touched_y=0;
+                        // uint8_t  dir=event.packet->data[6];
+                        memcpy(&touched_x,&event.packet->data[2],sizeof(uint16_t));
+                        memcpy(&touched_y,&event.packet->data[4],sizeof(uint16_t));
+                        uint16_t touched_tile=OldeMap.GetTileInfoAt(touched_x,touched_y);
+                        // printf("Tile touched is %d\n",touched_tile);
+
+                        if(touched_tile==230)
+                        {
+                            OldeMap.PlaceTileInfoAt(231,touched_x,touched_y);
+                        }
+                        if(touched_tile==231)
+                        {
+                            OldeMap.PlaceTileInfoAt(230,touched_x,touched_y);
+                        }
+
+                        if(touched_tile==232)
+                        {
+                            OldeMap.PlaceTileInfoAt(233,touched_x,touched_y);
+                        }
+                        if(touched_tile==233)
+                        {
+                            OldeMap.PlaceTileInfoAt(232,touched_x,touched_y);
+                        }
+
+                        if(touched_tile==240)
+                        {
+                            OldeMap.PlaceTileInfoAt(241,touched_x,touched_y);
+                        }
+                        if(touched_tile==241)
+                        {
+                            OldeMap.PlaceTileInfoAt(240,touched_x,touched_y);
+                        }
+
+                        if(touched_tile==242)
+                        {
+                            OldeMap.PlaceTileInfoAt(243,touched_x,touched_y);
+                        }
+                        if(touched_tile==243)
+                        {
+                            OldeMap.PlaceTileInfoAt(242,touched_x,touched_y);
+                        }
+                    }
                 }
                 if(event.channelID==channel_msgs)
                 {

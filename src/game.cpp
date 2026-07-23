@@ -175,7 +175,6 @@ int main()
                     Set_Game(OldeAssets,OldeSettings,OldeNet,d_time);
                     OldeMenu.public_display_connect_menu=false;
                     OldeMenu.public_display_main_menu=true;
-                    OldeSettings.connection_to_host=false;
                 }
                 OldeSettings.connection_to_host=false;
             }
@@ -369,7 +368,14 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
 
         if(IsKeyPressed(KEY_SPACE) && !show_menu)
         {
-            OldePlayer.local_use=true;
+            OldePlayer.pl_act[local_player_id]='t';
+            local_player_action=true;
+        }
+
+        if(IsKeyPressed(KEY_LEFT_CONTROL) && !show_menu)
+        {
+            OldePlayer.pl_act[local_player_id]='a';
+            local_player_action=true;
         }
 
 
@@ -382,7 +388,7 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
         {
             OldePlayer.pl_pointer_pos[local_player_id].x+=speed_player_move;
             OldePlayer.pl_dir[local_player_id]='d';
-            OldePlayer.pl_act[local_player_id]='d';
+            OldePlayer.pl_act[local_player_id]='w';
             local_player_action=true;
             if(OldePlayer.pl_pointer_pos[local_player_id].y<0.0) OldePlayer.pl_pointer_pos[local_player_id].y=0.0;
         }
@@ -409,6 +415,8 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
                                   OldePlayer.pl_act[local_player_id],
                                   OldePlayer.cur_x,OldePlayer.cur_y,
                                   OldePlayer.pl_avatar[local_player_id]);
+
+                                  // will be reworked into a struct when prototyping will be done
                             
         for(int i=0;i<max_clients;i++)
         {
@@ -569,5 +577,7 @@ int Set_Game(Game_Assets &OldeAssets,Game_Data &OldeSettings,NetworkClient &Olde
     }
 
     if(!OldeNet.server_disconnect) OldeNet.Disconnect();
+    OldeMap.CleanUp();
+    OldeNet.LocalPlayerId=-1;
     return secret_rc;
 }

@@ -161,7 +161,7 @@ void Game_Player::DrawPlayers(Game_Assets &OldeAssets,float &d_time)
             }
             else
             {
-                if(pl_act[i]==player_num)
+                if(pl_active[i]==player_num)
                 {
                     offset=avatar_offset+pl_side[i];
                     DrawTextureRec(OldeAssets.AvatarsSprite,tiles[offset],local_player_pos,WHITE);

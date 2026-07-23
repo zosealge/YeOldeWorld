@@ -83,6 +83,39 @@ void NetworkClient::Update(double now,float deltaT,MapTools &OldeMap,Game_Player
 
     if(server==nullptr) return;
 
+    if(Clients[LocalPlayerId].action=='t')
+    {
+        uint16_t touched_x=Clients[LocalPlayerId].posx;
+        uint16_t touched_y=Clients[LocalPlayerId].posy;
+
+        if(Clients[LocalPlayerId].direction=='w')
+        {
+            touched_y--;
+        }
+        if(Clients[LocalPlayerId].direction=='x')
+        {
+            touched_y++;
+        }
+        if(Clients[LocalPlayerId].direction=='a')
+        {
+            touched_x--;
+        }
+        if(Clients[LocalPlayerId].direction=='d')
+        {
+            touched_x++;
+        }
+        uint8_t comm_buffer[8]{};
+        comm_buffer[0]=(uint8_t)LocalPlayerId;
+        comm_buffer[1]=Clients[LocalPlayerId].action;
+        memcpy(&comm_buffer[2],&touched_x,sizeof(uint16_t));
+        memcpy(&comm_buffer[4],&touched_y,sizeof(uint16_t));
+        comm_buffer[6]=Clients[LocalPlayerId].direction;
+
+        ENetPacket *comm_packet=enet_packet_create(comm_buffer,sizeof(comm_buffer),ENET_PACKET_FLAG_RELIABLE);
+        
+        enet_peer_send(server,channel_comm,comm_packet);
+    }
+
     if(LocalPlayerId>=0 && now-LastInputSend>InputUpdateInterval)
     {
         // PACKET CONSTRUCTION FROM CLIENT TO SERVER
@@ -140,7 +173,6 @@ void NetworkClient::Update(double now,float deltaT,MapTools &OldeMap,Game_Player
                         Clients[RemotePlayer].avatar=event.packet->data[7];
                         memcpy(&Clients[RemotePlayer].Position.x,&event.packet->data[8],sizeof(float));
                         memcpy(&Clients[RemotePlayer].Position.y,&event.packet->data[12],sizeof(float));
-
                     }
 
 
@@ -237,6 +269,7 @@ void NetworkClient::Update(double now,float deltaT,MapTools &OldeMap,Game_Player
                             Clients[LocalPlayerId].Active=true;
                             memcpy(&local_spawn_point_x,&event.packet->data[2],sizeof(uint16_t));
                             memcpy(&local_spawn_point_y,&event.packet->data[4],sizeof(uint16_t));
+                            printf("spawned at x%d y%d\n",local_spawn_point_x,local_spawn_point_y);
                             uint16_t mapx=0;
                             uint16_t mapy=0;
                             memcpy(&mapx,&event.packet->data[6],sizeof(uint16_t));

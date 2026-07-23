@@ -466,6 +466,10 @@ void MapTools::GameCheckCollision(Game_Player &OldePlayer,bool debug_mode,bool p
                 case 175:
                 case 190:
                 case 192:
+                case 231:
+                case 233:
+                case 241:
+                case 243:
 
                     P_Collision.x=-16.0f;
                     P_Collision.y=-16.0f;
@@ -916,6 +920,12 @@ void MapTools::GameSetMapSize(uint16_t setx,uint16_t sety)
 {
     max_size_x=setx;
     max_size_y=sety;
+}
+
+void MapTools::CleanUp()
+{
+    map_initialized=true;
+    ZeroMap();
 }
 
 void MapTools::FirstSet()

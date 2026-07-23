@@ -11,12 +11,12 @@ class Game_Player
     const int pngarraywidth=10;
     const int pngarrayheight=60;
     int player_num;
-    uint8_t pl_avatar[max_clients]{};
-    char pl_dir[max_clients]{};
-    char pl_act[max_clients]{};
-    uint8_t pl_side[max_clients]{};
-    Vector2 pl_pointer_pos[max_clients]{};
-    bool pl_active[max_clients]{};
+    uint8_t     pl_avatar[max_clients]{};
+    uint8_t     pl_side[max_clients]{};
+    char        pl_dir[max_clients]{};
+    char        pl_act[max_clients]{};
+    Vector2     pl_pointer_pos[max_clients]{};
+    bool        pl_active[max_clients]{};
     Rectangle local_collision;
     bool local_collide;
     bool local_use;
